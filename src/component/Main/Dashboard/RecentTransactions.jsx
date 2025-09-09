@@ -136,8 +136,8 @@ const RecentTransactions = () => {
         theme={{
           components: {
             Table: {
-              headerBg: "#92b8c0",
-              headerColor: "#000",
+              headerBg: "#778beb",
+              headerColor: "#fff",
               headerBorderRadius: 5,
             },
           },

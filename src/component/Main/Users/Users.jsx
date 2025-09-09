@@ -5,46 +5,45 @@ import { IoIosSearch } from "react-icons/io";
 import { FaAngleLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { GoInfo } from "react-icons/go";
-import { useGetAllUsersQuery } from "../../../redux/features/user/userApi";
+// Removed: import { useGetAllUsersQuery } from "../../../redux/features/user/userApi";
 
 const { Item } = Form;
 
 const Users = () => {
-  const { data, isFetching, isError, error } = useGetAllUsersQuery({
-    from: 0,
-    to: 10,
-  });
-
-  console.log("Fetched Data:", data?.data?.attributes);
-
   const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [dataSource, setDataSource] = useState([]); // ✅ Store filtered data
+  const [dataSource, setDataSource] = useState([]); // Store filtered data
 
-  const allUsers = data?.data?.attributes;
+  // Demo Users Data (Mocked Data for Testing)
+  const allUsers = [
+    { id: 1, fullName: "John Doe", accountID: "123", email: "john@example.com", phoneNumber: "123456789", address_line1: "123 Main St", createdAt: "2025-09-09T10:00:00Z", image: { url: "https://via.placeholder.com/150" }, status: "Active", gender: "Male" },
+    { id: 2, fullName: "Jane Smith", accountID: "124", email: "jane@example.com", phoneNumber: "987654321", address_line1: "456 Elm St", createdAt: "2025-09-08T12:00:00Z", image: { url: "https://via.placeholder.com/150" }, status: "Inactive", gender: "Female" },
+    { id: 3, fullName: "Alice Johnson", accountID: "125", email: "alice@example.com", phoneNumber: "456789123", address_line1: "789 Pine St", createdAt: "2025-09-07T09:00:00Z", image: { url: "https://via.placeholder.com/150" }, status: "Active", gender: "Female" },
+    { id: 4, fullName: "Bob Brown", accountID: "126", email: "bob@example.com", phoneNumber: "321654987", address_line1: "101 Maple St", createdAt: "2025-09-06T15:30:00Z", image: { url: "https://via.placeholder.com/150" }, status: "Active", gender: "Male" },
+    { id: 5, fullName: "Charlie Green", accountID: "127", email: "charlie@example.com", phoneNumber: "159753468", address_line1: "202 Oak St", createdAt: "2025-09-05T10:45:00Z", image: { url: "https://via.placeholder.com/150" }, status: "Inactive", gender: "Male" },
+    // Add more demo users as needed
+  ];
 
-  // ✅ **Update `dataSource` when API call completes**
+  // Update `dataSource` when `allUsers` is available
   useEffect(() => {
-    if (allUsers) {
-      const formattedUsers = allUsers.map((user, index) => ({
-        id: user.id || user._id, // Ensure ID exists
-        si: index + 1,
-        fullName: user.fullName,
-        accountID: user.accountID,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        address_line1: user.address_line1,
-        createdAt: user.createdAt,
-        imageUrl: user.image?.url,
-        status: user.status,
-        gender: user.gender,
-      }));
-      setDataSource(formattedUsers);
-    }
-  }, [allUsers]);
+    const formattedUsers = allUsers.map((user, index) => ({
+      id: user.id, // Ensure ID exists
+      si: index + 1,
+      fullName: user.fullName,
+      accountID: user.accountID,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      address_line1: user.address_line1,
+      createdAt: user.createdAt,
+      imageUrl: user.image?.url,
+      status: user.status,
+      gender: user.gender,
+    }));
+    setDataSource(formattedUsers);
+  }, []);
 
-  // ✅ **Search Filter**
+  // Search Filter
   useEffect(() => {
     if (searchText.trim() === "") {
       setDataSource(allUsers || []);
@@ -54,13 +53,13 @@ const Users = () => {
           (user) =>
             user.fullName?.toLowerCase().includes(searchText.toLowerCase()) ||
             user.email?.toLowerCase().includes(searchText.toLowerCase()) ||
-            String(user.phone)?.includes(searchText)
+            String(user.phoneNumber)?.includes(searchText)
         ) || []
       );
     }
-  }, [searchText, allUsers]);
+  }, [searchText]);
 
-  // ✅ **Date Filter**
+  // Date Filter
   useEffect(() => {
     if (!selectedDate) {
       setDataSource(allUsers || []);
@@ -70,7 +69,7 @@ const Users = () => {
         allUsers?.filter((user) => moment(user.createdAt).format("YYYY-MM-DD") === formattedDate) || []
       );
     }
-  }, [selectedDate, allUsers]);
+  }, [selectedDate]);
 
   const columns = [
     {
@@ -78,9 +77,7 @@ const Users = () => {
       render: (text, record, index) => {
         return <span>{index + 1}</span>;
       }
-
     },
-    // { title: "Account ID", dataIndex: "accountID", key: "accountID" },
     { title: "Full Name", dataIndex: "fullName", key: "fullName" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
@@ -110,20 +107,20 @@ const Users = () => {
         <Form layout="inline" className="flex space-x-4">
           <Item name="date">
             <DatePicker
-              className="rounded-md border border-[#92b8c0]"
+              className="rounded-md border border-[#778beb]"
               onChange={(date) => setSelectedDate(date)}
               placeholder="Select Date"
             />
           </Item>
           <Item name="username">
             <Input
-              className="rounded-md w-[70%] md:w-full border border-[#92b8c0]"
+              className="rounded-md w-[70%] md:w-full border border-[#778beb]"
               placeholder="User Name"
               onChange={(e) => setSearchText(e.target.value)}
             />
           </Item>
           <Item>
-            <button className="size-8 rounded-full flex justify-center items-center bg-[#92b8c0] text-black">
+            <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-black">
               <IoIosSearch className="size-5" />
             </button>
           </Item>
@@ -134,8 +131,8 @@ const Users = () => {
         theme={{
           components: {
             Table: {
-              headerBg: "#92b8c0",
-              headerColor: "#000",
+              headerBg: "#778beb",
+              headerColor: "#fff",
               headerBorderRadius: 5,
             },
           },
@@ -152,7 +149,7 @@ const Users = () => {
           columns={columns}
           dataSource={dataSource}
           rowKey="id"
-          loading={isFetching}
+          loading={false} // Since we are using mock data, we can set this to false
         />
       </ConfigProvider>
     </section>

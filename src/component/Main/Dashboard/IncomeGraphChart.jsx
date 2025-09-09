@@ -19,7 +19,7 @@ const IncomeGraphChart = () => {
   ];
 
   return (
-    <section className="w-full col-span-full md:col-span-4 bg-white rounded-lg border-2 border-[#778beb] shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+    <section className="w-full col-span-full md:col-span-4 bg-white rounded-xl border-2 border-[#778beb] shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
       <ResponsiveContainer width="100%" height={500} className="pr-5 pt-5">
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />

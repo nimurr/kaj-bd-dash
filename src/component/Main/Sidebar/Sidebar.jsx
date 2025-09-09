@@ -22,16 +22,16 @@ const sidebarItems = [
     name: "Dashboard",
     icon: <MdDashboard className="size-6" />,
   },
-  {
-    path: "/users",
-    name: "User",
-    icon: <FaUserAlt className="size-6" />,
-  },
 
   {
     path: "/lawyer",
-    name: "Lawyer",
+    name: "Sub Admin ",
     icon: <FaUsers className="size-6" />,
+  },
+  {
+    path: "/users",
+    name: "User List",
+    icon: <FaUserAlt className="size-6" />,
   },
   {
     path: "/assets",
@@ -108,9 +108,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   return (
     <div>
       {/* Desktop Sidebar */}
-      <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#038c6d] fixed shadow-2xl">
-        <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 bg-white mb-10 text-black">
-          <img src={logo} alt="logo" className="w-[60px] mb-5 " />
+      <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#778beb] fixed shadow-2xl">
+        <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 mb-10 text-black">
+          <img src={logo} alt="logo" className="w-[100px] rounded-full shadow-xl mb-5 " />
         </Link>
         <ul className="flex flex-col gap-5">
           {sidebarItems.map((item) => (
@@ -118,7 +118,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `w-[80%] mx-auto px-5 py-2 flex justify-start items-center gap-3 text-white ${isActive ? "bg-white !text-black border-l-4 border-[#f13919]" : ""
+                `w-[80%] mx-auto px-5 py-2 flex justify-start items-center gap-3 text-white ${isActive ? "bg-white !text-[#778beb] rounded-xl" : ""
                 }`
               }
             >
@@ -140,14 +140,14 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
       {/* Mobile Sidebar */}
       <div
-        className={`fixed top-0 overflow-y-auto left-0 z-40 w-64 h-full bg-[#038c6d] shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 overflow-y-auto left-0 z-40 w-64 h-full bg-[#778beb] shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:hidden`}
       >
         <div onClick={toggleSidebar} className="absolute top-0 right-0 p-4">
           <RxCross1 className="size-6 text-black" />
         </div>
         <div className="flex flex-col justify-center items-center pt-5 gap-2 bg-white text-white">
-          <img src={logo} alt="logo"  className="h-20 mb-5" />
+          <img src={logo} alt="logo" className="h-20 mb-5" />
         </div>
         <ul className="flex flex-col gap-3 mt-10">
           {sidebarItems.map((item) => (
@@ -156,7 +156,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
               to={item.path}
               onClick={toggleSidebar} // Close sidebar on link click
               className={({ isActive }) =>
-                `w-[70%] mx-auto px-5 py-2 flex items-center gap-3 text-white ${isActive ? "bg-[#038c6d] " : ""
+                `w-[70%] mx-auto px-5 py-2 flex items-center gap-3 text-white ${isActive ? "bg-[#778beb] " : ""
                 }`
               }
             >
