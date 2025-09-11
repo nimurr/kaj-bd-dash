@@ -7,57 +7,67 @@ import logo from "/public/logo/dashboard_log.png";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../redux/features/auth/authSlice";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-import { FaBriefcase, FaCopy, FaUserAlt, FaUsers } from "react-icons/fa";
-import { MdDashboard, MdOutlineContactPage } from "react-icons/md";
+import { FaBriefcase, FaCopy, FaUserAlt, FaUserFriends, FaUsers } from "react-icons/fa";
+import { MdDashboard, MdOutlineContactPage, MdOutlineMiscellaneousServices } from "react-icons/md";
 // import { GiLightBulb } from "react-icons/gi";
 import { HiLightBulb } from "react-icons/hi";
-import { FaRegMoneyBill1, FaSackDollar } from "react-icons/fa6";
+import { FaBangladeshiTakaSign, FaRegMoneyBill1, FaSackDollar } from "react-icons/fa6";
 import { GoHomeFill } from "react-icons/go";
 import { GrDocumentImage } from "react-icons/gr";
 import { RxCross1 } from "react-icons/rx";
+import { CgLoadbarDoc } from "react-icons/cg";
 
 const sidebarItems = [
   {
     path: "/",
     name: "Dashboard",
-    icon: <MdDashboard className="size-6" />,
+    icon: <MdDashboard className="size-7" />,
   },
 
   {
-    path: "/lawyer",
+    path: "/admins",
     name: "Sub Admin ",
-    icon: <FaUsers className="size-6" />,
+    icon: <FaUsers className="size-7" />,
   },
   {
     path: "/users",
     name: "User List",
-    icon: <FaUserAlt className="size-6" />,
+    icon: <FaUserAlt className="size-5" />,
   },
   {
-    path: "/assets",
-    name: "Categories",
-    icon: <GoHomeFill className="size-6" />,
+    path: "/provider-list",
+    name: "Provider list",
+    icon: <FaUserFriends className="size-7" />,
   },
   {
-    path: "/all-document",
-    name: "All Document",
-    icon: <GrDocumentImage className="size-5" />,
+    path: "/all-services",
+    name: "All Services",
+    icon: <MdOutlineMiscellaneousServices className="size-6" />,
   },
   {
-    path: "/collaborator",
-    name: "Collaborator ",
-    icon: <FaUsers className="size-6" />,
+    path: "/work-traker",
+    name: "Work Traker",
+    icon: <CgLoadbarDoc className="size-6" />,
   },
   {
-    path: "/subscription",
-    name: "Subscription ",
-    icon: <MdOutlineContactPage className="size-6" />,
+    path: "/withdrawal-request",
+    name: "Withdrawal Request",
+    icon: <FaBangladeshiTakaSign className="size-6" />,
   },
-  {
-    path: "/earnings",
-    name: "Earnings ",
-    icon: <FaRegMoneyBill1 className="size-6" />,
-  },
+
+
+
+
+  // {
+  //   path: "/subscription",
+  //   name: "Subscription ",
+  //   icon: <MdOutlineContactPage className="size-6" />,
+  // },
+  // {
+  //   path: "/earnings",
+  //   name: "Earnings ",
+  //   icon: <FaRegMoneyBill1 className="size-6" />,
+  // },
   // {
   //   path: "/user-request",
   //   name: "Super User Request",

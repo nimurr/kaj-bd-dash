@@ -46,6 +46,10 @@ import AllFaq from "../page/Faq/AllFaq";
 import AllDocument from "../component/Main/AllDocument/AllDocument";
 import Lawyera from "../page/Lawyer/Lawyera";
 import PrivetRoute from "../PrivetRoute/PrivetRoute";
+import ProviderList from "../page/ProviderList/ProviderList";
+import AllServices from "../page/AllServices/AllServices";
+import WorkTraker from "../page/WorkTraker/WorkTraker";
+import WithdrawalRequest from "../page/WithdrawalRequest/WithdrawalRequest";
 
 
 
@@ -75,24 +79,26 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "lawyer",
+        path: "admins",
         element: <Lawyera />,
       },
-
-
       {
-        path: "assets",
-        element: <CategoriesPage />,
-      },
-
-      {
-        path: "collaborator",
-        element: <Collaborator />,
+        path: "provider-list",
+        element: <ProviderList />,
       },
       {
-        path: "collaborator/:id",
-        element: <CollaboratorDetails />,
+        path: "all-services",
+        element: <AllServices />,
       },
+      {
+        path: "work-traker",
+        element: <WorkTraker />,
+      },
+      {
+        path: "withdrawal-request",
+        element: <WithdrawalRequest />,
+      },
+
 
       {
         path: "subscription",

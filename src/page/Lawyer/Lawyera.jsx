@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Table, Modal, Pagination, ConfigProvider, Form, Input, Button, Upload, message } from "antd";
-import { FaInfoCircle } from "react-icons/fa";
-import { UploadOutlined } from "@ant-design/icons";
+import { Table, Modal, Pagination, ConfigProvider, Form, Input, Button, Select, message } from "antd";
+import { FaInfoCircle, FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import moment from "moment";
@@ -11,17 +10,16 @@ const Lawyera = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-    const [isEditModalVisible, setIsEditModalVisible] = useState(false);  // Edit Modal visibility
+    const [isEditModalVisible, setIsEditModalVisible] = useState(false); // Edit Modal visibility
     const [selectedUser, setSelectedUser] = useState(null);
     const [form] = Form.useForm();
-    const [image, setImage] = useState(null);
 
     // Demo data for testing
-    const demoLawyers = [
-        { id: 1, name: "John Doe", email: "john@example.com", phone: "123456789", createdAt: "2025-09-09T10:00:00Z", imageUrl: "https://via.placeholder.com/150", experience: 5 },
-        { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "987654321", createdAt: "2025-09-08T12:00:00Z", imageUrl: "https://via.placeholder.com/150", experience: 7 },
-        { id: 3, name: "Alice Johnson", email: "alice@example.com", phone: "456789123", createdAt: "2025-09-07T09:00:00Z", imageUrl: "https://via.placeholder.com/150", experience: 10 },
-        // Add more demo lawyers as required
+    const demoSubAdmins = [
+        { id: 1, name: "John Doe", email: "john@example.com", phone: "123456789", createdAt: "2025-09-09T10:00:00Z", status: "Active" },
+        { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "987654321", createdAt: "2025-09-08T12:00:00Z", status: "Inactive" },
+        { id: 3, name: "Alice Johnson", email: "alice@example.com", phone: "456789123", createdAt: "2025-09-07T09:00:00Z", status: "Active" },
+        // Add more demo data as required
     ];
 
     // Handle "View Details" Modal
@@ -35,7 +33,7 @@ const Lawyera = () => {
         setIsModalVisible(false);
     };
 
-    // Handle "Add Lawyer" Modal
+    // Handle "Add Sub Admin" Modal
     const handleOpenAddModal = () => {
         setIsAddModalVisible(true);
     };
@@ -45,14 +43,14 @@ const Lawyera = () => {
         form.resetFields();
     };
 
-    // Handle "Edit Lawyer" Modal
+    // Handle "Edit Sub Admin" Modal
     const handleOpenEditModal = (record) => {
         setSelectedUser(record);
         form.setFieldsValue({
             fullName: record.name,
             email: record.email,
             phone: record.phone,
-            yearOfExpriences: record.experience,
+            status: record.status,
         });
         setIsEditModalVisible(true);
     };
@@ -62,35 +60,26 @@ const Lawyera = () => {
         form.resetFields();
     };
 
-    const handleImageUpload = (info) => {
-        setImage(info.file?.originFileObj);
-    };
+    // Handle Add Sub Admin form submission
+    const handleAddSubAdmin = (values) => {
+        const newSubAdmin = { ...values, createdAt: new Date(), id: demoSubAdmins.length + 1 };
+        demoSubAdmins.push(newSubAdmin);
 
-    // Handle Add Lawyer form submission
-    const handleAddLawyer = (values) => {
-        const formData = new FormData();
-        formData.append("lawyer_image", image);
-        formData.append("lawyer_name", values.fullName);
-        formData.append("lawyer_email", values.email);
-        formData.append("lawyer_phone_number", values.phone);
-        formData.append("lawyer_experience_in_year", values.yearOfExpriences);
-
-        // Simulate adding lawyer
-        message.success("Lawyer added successfully!");
+        message.success("Sub Admin added successfully!");
         setIsAddModalVisible(false);
     };
 
-    // Handle Edit Lawyer form submission
-    const handleEditLawyer = (values) => {
-        const updatedUser = { ...selectedUser, ...values, imageUrl: image };  // Merge updated values
+    // Handle Edit Sub Admin form submission
+    const handleEditSubAdmin = (values) => {
+        const updatedUser = { ...selectedUser, ...values }; // Merge updated values
 
-        // Simulate editing lawyer
-        message.success("Lawyer updated successfully!");
+        // Simulate editing sub admin
+        message.success("Sub Admin updated successfully!");
         setIsEditModalVisible(false);
-        setSelectedUser(updatedUser);  // Update the displayed user data
+        setSelectedUser(updatedUser); // Update the displayed user data
     };
 
-    // Handle Delete Lawyer
+    // Handle Delete Sub Admin
     const handleDelete = (item) => {
         Swal.fire({
             title: "Are you sure?",
@@ -104,7 +93,7 @@ const Lawyera = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 // Simulate delete
-                message.success("Lawyer deleted successfully!");
+                message.success("Sub Admin deleted successfully!");
             }
         });
     };
@@ -118,7 +107,7 @@ const Lawyera = () => {
             render: (text, record, index) => index + 1,
         },
         {
-            title: "Full Name",
+            title: "Sub Admin Name",
             dataIndex: "name",
             key: "name",
         },
@@ -133,10 +122,21 @@ const Lawyera = () => {
             key: "phone",
         },
         {
-            title: "Joined Date",
-            dataIndex: "joinedDate",
-            key: "joinedDate",
+            title: "Joining Date",
+            dataIndex: "joiningDate",
+            key: "joiningDate",
             render: (date) => moment(date).format("DD MMM YYYY"),
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            key: "status",
+            render: (status) => <div>
+                {status == "Active" ?
+                    <span className="py-2 px-5 rounded-lg border-2 border-green-600 text-green-600">Active </span> :
+                    <span className="py-2 px-5 rounded-lg border-2 border-red-600 text-red-600">Inactive </span>
+                }
+            </div>,
         },
         {
             title: "Action",
@@ -153,9 +153,9 @@ const Lawyera = () => {
                     />
                     <button
                         onClick={() => handleOpenEditModal(record)}
-                        className="text-xl text-green-600 hover:text-green-500"
+                        className="text-xl text-[#778beb] hover:text-[#778beb]"
                     >
-                        Edit
+                        <FaRegEdit />
                     </button>
                 </div>
             ),
@@ -163,14 +163,14 @@ const Lawyera = () => {
     ];
 
     // Paginate Data
-    const paginatedData = demoLawyers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedData = demoSubAdmins.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
         <div className="py-10 text-base">
             {/* Header with Add Button */}
             <div className="flex justify-between items-center mb-5">
                 <h2 className="text-2xl font-semibold mb-4">Sub Admin List</h2>
-                <button onClick={handleOpenAddModal} className="bg-[#038c6d] text-white text-xl py-2 px-8 rounded">
+                <button onClick={handleOpenAddModal} className="bg-[#778beb] text-white text-xl py-2 px-8 rounded">
                     Add Sub Admin
                 </button>
             </div>
@@ -180,8 +180,8 @@ const Lawyera = () => {
                 theme={{
                     components: {
                         Table: {
-                            headerBg: "#92b8c0",
-                            headerColor: "#000",
+                            headerBg: "#778beb",
+                            headerColor: "#fff",
                             headerBorderRadius: 5,
                         },
                     },
@@ -203,30 +203,28 @@ const Lawyera = () => {
                 <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={demoLawyers.length || 0}
+                    total={demoSubAdmins.length || 0}
                     onChange={setCurrentPage}
                     showSizeChanger={false}
                 />
             </div>
 
-            {/* Lawyer Details Modal */}
-            <Modal open={isModalVisible} onCancel={handleCloseModal} footer={null} title="Lawyer Details">
+            {/* Sub Admin Details Modal */}
+            <Modal open={isModalVisible} onCancel={handleCloseModal} footer={null} title="Sub Admin Details">
                 {selectedUser && (
                     <div className="text-gray-700">
                         <p className="my-5 flex items-center justify-between"><strong>Full Name:</strong> {selectedUser.name}</p>
                         <p className="my-5 flex items-center justify-between"><strong>Email:</strong> {selectedUser.email}</p>
                         <p className="my-5 flex items-center justify-between"><strong>Phone Number:</strong> {selectedUser.phone}</p>
-                        <p className="my-5 flex items-center justify-between"><strong>Joined Date:</strong> {moment(selectedUser.createdAt).format("DD MMM YYYY")}</p>
-                        <div>
-                            <img className="w-2/4 mx-auto" src={selectedUser.imageUrl} alt="" />
-                        </div>
+                        <p className="my-5 flex items-center justify-between"><strong>Joining Date:</strong> {moment(selectedUser.createdAt).format("DD MMM YYYY")}</p>
+                        <p className="my-5 flex items-center justify-between"><strong>Status:</strong> {selectedUser.status}</p>
                     </div>
                 )}
             </Modal>
 
-            {/* Add Lawyer Modal */}
-            <Modal open={isAddModalVisible} onCancel={handleCloseAddModal} footer={null} title="Add New Lawyer">
-                <Form form={form} layout="vertical" onFinish={handleAddLawyer}>
+            {/* Add Sub Admin Modal */}
+            <Modal open={isAddModalVisible} onCancel={handleCloseAddModal} footer={null} title="Add New Sub Admin">
+                <Form form={form} layout="vertical" onFinish={handleAddSubAdmin}>
                     <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: "Please enter full name" }]}>
                         <Input placeholder="Enter full name" />
                     </Form.Item>
@@ -236,24 +234,22 @@ const Lawyera = () => {
                     <Form.Item label="Phone Number" name="phone" rules={[{ required: true, message: "Please enter phone number" }]}>
                         <Input placeholder="Enter phone number" />
                     </Form.Item>
-                    <Form.Item label="Year of Experience" name="yearOfExpriences" rules={[{ required: true, message: "Please enter year of experience" }]}>
-                        <Input placeholder="Enter year of experience" />
-                    </Form.Item>
-                    <Form.Item label="Image" name="image" rules={[{ required: true, message: "Please upload an image" }]}>
-                        <Upload listType="picture" maxCount={1} onChange={handleImageUpload}>
-                            <Button icon={<UploadOutlined />}>Upload</Button>
-                        </Upload>
+                    <Form.Item label="Status" name="status" rules={[{ required: true, message: "Please select status" }]}>
+                        <Select defaultValue="Active" onChange={(value) => setStatus(value)}>
+                            <Select.Option value="Active">Active</Select.Option>
+                            <Select.Option value="Inactive">Inactive</Select.Option>
+                        </Select>
                     </Form.Item>
                     <div className="flex justify-end mt-4">
                         <Button onClick={handleCloseAddModal} className="mr-3">Cancel</Button>
-                        <Button type="primary" htmlType="submit">Add Lawyer</Button>
+                        <Button type="primary" htmlType="submit">Add Sub Admin</Button>
                     </div>
                 </Form>
             </Modal>
 
-            {/* Edit Lawyer Modal */}
-            <Modal open={isEditModalVisible} onCancel={handleCloseEditModal} footer={null} title="Edit Lawyer">
-                <Form form={form} layout="vertical" onFinish={handleEditLawyer}>
+            {/* Edit Sub Admin Modal */}
+            <Modal open={isEditModalVisible} onCancel={handleCloseEditModal} footer={null} title="Edit Sub Admin">
+                <Form form={form} layout="vertical" onFinish={handleEditSubAdmin}>
                     <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: "Please enter full name" }]}>
                         <Input placeholder="Enter full name" />
                     </Form.Item>
@@ -263,13 +259,11 @@ const Lawyera = () => {
                     <Form.Item label="Phone Number" name="phone" rules={[{ required: true, message: "Please enter phone number" }]}>
                         <Input placeholder="Enter phone number" />
                     </Form.Item>
-                    <Form.Item label="Year of Experience" name="yearOfExpriences" rules={[{ required: true, message: "Please enter year of experience" }]}>
-                        <Input placeholder="Enter year of experience" />
-                    </Form.Item>
-                    <Form.Item label="Image" name="image" rules={[{ required: true, message: "Please upload an image" }]}>
-                        <Upload listType="picture" maxCount={1} onChange={handleImageUpload}>
-                            <Button icon={<UploadOutlined />}>Upload</Button>
-                        </Upload>
+                    <Form.Item label="Status" name="status" rules={[{ required: true, message: "Please select status" }]}>
+                        <Select defaultValue={selectedUser?.status} onChange={(value) => setStatus(value)}>
+                            <Select.Option value="Active">Active</Select.Option>
+                            <Select.Option value="Inactive">Inactive</Select.Option>
+                        </Select>
                     </Form.Item>
                     <div className="flex justify-end mt-4">
                         <Button onClick={handleCloseEditModal} className="mr-3">Cancel</Button>
