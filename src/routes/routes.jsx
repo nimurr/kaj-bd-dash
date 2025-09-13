@@ -50,6 +50,7 @@ import ProviderList from "../page/ProviderList/ProviderList";
 import AllServices from "../page/AllServices/AllServices";
 import WorkTraker from "../page/WorkTraker/WorkTraker";
 import WithdrawalRequest from "../page/WithdrawalRequest/WithdrawalRequest";
+import ProviderListNewProviderRequest from "../page/ProviderList/ProviderListNewProviderRequest";
 
 
 
@@ -85,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: "provider-list",
         element: <ProviderList />,
+      },
+      {
+        path: "provider-list/new-provider-request",
+        element: <ProviderListNewProviderRequest />,
       },
       {
         path: "all-services",

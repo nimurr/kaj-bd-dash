@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from "react";
 import { ConfigProvider, Table, Form, Input, DatePicker } from "antd";
 import moment from "moment";
@@ -9,7 +11,7 @@ import { IoEyeOutline } from "react-icons/io5";
 
 const { Item } = Form;
 
-const ProviderList = () => {
+const ProviderListNewProviderRequest = () => {
     // Demo data (simulating fetched data)
     const demoUserData = [
         { id: 1, fullName: "John Doe", accountID: "A123", email: "john.doe@example.com", phoneNumber: "123-456-7890", address_line1: "123 Main St", createdAt: "2023-06-10", status: "active", gender: "male", image: { url: "" }, status: "Active" },
@@ -71,7 +73,6 @@ const ProviderList = () => {
         { title: "Full Name", dataIndex: "fullName", key: "fullName" },
         { title: "Email", dataIndex: "email", key: "email" },
         { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
-        { title: "status", dataIndex: "status", key: "status", render: (s) => <span className={`${s == "Active" && "bg-green-500 p-2 rounded-lg text-white"}`}>{s}</span> },
         {
             title: "Joined Date",
             dataIndex: "createdAt",
@@ -92,11 +93,11 @@ const ProviderList = () => {
     return (
         <section>
             <div className="md:flex justify-between items-center py-6 mb-4">
-                <Link to={"/"} className="text-2xl flex items-center ">
-                    <FaAngleLeft />  Provider list  {detailsVisible ? "Details" : ""}
+                <Link to={"/provider-list"} className="text-2xl flex items-center ">
+                    <FaAngleLeft />  New Provider Request  {detailsVisible ? "Details" : ""}
                 </Link>
                 <Form layout="inline" className="flex space-x-4">
-                    <Link to={'/provider-list/new-provider-request'} className="py-2 px-8 hover:!text-fuchsia-50  text-white rounded-lg bg-[#778beb]">New Provider Request</Link>
+                    {/* <Link to={'/provider-list/new-provider-request'} className="py-2 px-8 text-white rounded-lg bg-[#778beb]">New Provider Request</Link> */}
                     <Item name="date">
                         <DatePicker
                             className="rounded-md border border-[#778beb]"
@@ -155,7 +156,7 @@ const ProviderList = () => {
                         </div>
 
                         {/* Provider Profile Section */}
-                        <div className="flex items-center justify-between gap-5 mb-5">
+                        <div className="flex items-center flex-wrap justify-between gap-5 mb-5">
                             <div className="flex items-center gap-5">
                                 <img
                                     className="w-24 h-24 rounded-full"
@@ -163,6 +164,10 @@ const ProviderList = () => {
                                     alt="Provider"
                                 />
                                 <h1 className="text-2xl font-semibold">Imran Khan</h1>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button className="bg-[#778beb] text-white p-2 rounded-lg">Accept</button>
+                                <button className="border-[#778beb] border p-2 rounded-lg">Reject</button>
                             </div>
                         </div>
 
@@ -223,4 +228,4 @@ const ProviderList = () => {
     );
 };
 
-export default ProviderList;
+export default ProviderListNewProviderRequest;
