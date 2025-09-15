@@ -47,6 +47,10 @@ const Settings = () => {
       title: "About us",
       path: "about-us",
     },
+    {
+      title: "Contact Us",
+      path: "contact-us",
+    },
    
   ];
 

@@ -54,6 +54,7 @@ import ProviderListNewProviderRequest from "../page/ProviderList/ProviderListNew
 import WorkTrakercompleted from "../page/WorkTraker/WorkTrakercompleted";
 import WorkTrakercancelled from "../page/WorkTraker/WorkTrakercancelled";
 import WorkTrakerInProgress from "../page/WorkTraker/WorkTrakerInProgress";
+import ContactUs from "../page/ContactUs/ContactUs";
 
 
 
@@ -174,6 +175,10 @@ const router = createBrowserRouter([
       {
         path: "/settings/edit-about-us/:id",
         element: <EditAboutUs />
+      },
+      {
+        path: "settings/contact-us",
+        element: <ContactUs />,
       },
 
 
