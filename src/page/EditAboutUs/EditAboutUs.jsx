@@ -81,7 +81,7 @@ const EditAboutUs = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-[#038c6d] text-white px-5 text-xl py-2 rounded-md"
+              className="bg-[#778beb] text-white px-5 text-xl py-2 rounded-md"
               loading={isLoading || isFetching} // Show loading state
             >
               {isLoading || isFetching ? "Updating..." : "Update"}
