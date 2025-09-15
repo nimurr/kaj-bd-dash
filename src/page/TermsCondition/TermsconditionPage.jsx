@@ -28,7 +28,7 @@ const TermsconditionPage = () => {
         </Link>
         <Link to={"/settings/edit-terms-conditions/11"}>
           <button
-            className="bg-[#038c6d] text-white flex items-center gap-2 p-2 rounded-md font-bold"
+            className="bg-[#778beb] text-white flex items-center gap-2 p-2 rounded-md font-bold"
             border
           >
             <TbEdit className="size-5" />
