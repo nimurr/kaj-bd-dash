@@ -51,6 +51,9 @@ import AllServices from "../page/AllServices/AllServices";
 import WorkTraker from "../page/WorkTraker/WorkTraker";
 import WithdrawalRequest from "../page/WithdrawalRequest/WithdrawalRequest";
 import ProviderListNewProviderRequest from "../page/ProviderList/ProviderListNewProviderRequest";
+import WorkTrakercompleted from "../page/WorkTraker/WorkTrakercompleted";
+import WorkTrakercancelled from "../page/WorkTraker/WorkTrakercancelled";
+import WorkTrakerInProgress from "../page/WorkTraker/WorkTrakerInProgress";
 
 
 
@@ -100,11 +103,24 @@ const router = createBrowserRouter([
         element: <WorkTraker />,
       },
       {
-        path: "withdrawal-request",
-        element: <WithdrawalRequest />,
+        path: "work-traker/completed/:id",
+        element: <WorkTrakercompleted />,
+      },
+      {
+        path: "work-traker/cancelled/:id",
+        element: <WorkTrakercancelled />,
+      },
+      {
+        path: "work-traker/in-progress/:id",
+        element: <WorkTrakerInProgress />,
       },
 
 
+
+      {
+        path: "withdrawal-request",
+        element: <WithdrawalRequest />,
+      },
       {
         path: "subscription",
         element: <Subscription />,
