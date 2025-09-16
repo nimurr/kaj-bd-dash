@@ -20,7 +20,7 @@ const ContactUs = () => {
     return (
         <div>
             <div className="flex justify-between items-center py-5">
-                <Link to="/settings" className="flex gap-2 items-center"> 
+                <Link to="/settings" className="flex gap-2 items-center">  
                     <>
                         <FaArrowLeft className="text-2xl" />
                     </>
