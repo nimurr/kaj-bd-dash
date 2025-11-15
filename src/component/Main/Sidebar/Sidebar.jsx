@@ -112,6 +112,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/auth");
   };
 
@@ -120,7 +122,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
       {/* Desktop Sidebar */}
       <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#778beb] fixed shadow-2xl">
         <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 mb-10 text-black">
-          <img src={logo} alt="logo" className="w-[100px] rounded-full shadow-xl mb-5 " />
+          <img src={logo} alt="logo" className="w-[100px] rounded shadow-xl mb-5 " />
         </Link>
         <ul className="flex flex-col gap-5">
           {sidebarItems.map((item) => (
@@ -153,11 +155,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         className={`fixed top-0 overflow-y-auto left-0 z-40 w-64 h-full bg-[#778beb] shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:hidden`}
       >
-        <div onClick={toggleSidebar} className="absolute top-0 right-0 p-4">
+        <div onClick={toggleSidebar} className="absolute cursor-pointer top-0 right-0 p-4">
           <RxCross1 className="size-6 text-black" />
         </div>
-        <div className="flex flex-col justify-center items-center pt-5 gap-2 bg-white text-white">
-          <img src={logo} alt="logo" className="h-20 mb-5" />
+        <div className="flex flex-col justify-center items-center pt-5 gap-2 ">
+          <img src={logo} alt="logo" className="h-20 rounded mb-5" />
         </div>
         <ul className="flex flex-col gap-3 mt-10">
           {sidebarItems.map((item) => (

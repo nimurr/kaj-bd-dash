@@ -23,28 +23,28 @@ const SignIn = () => {
     }
     try {
       const res = await login(data).unwrap();
-      console.log(res?.token);
+      console.log(res?.data?.attributes?.userWithoutPassword);
 
-      navigate("/");
-
+      
       if (res.error) {
         toast.error(res.error.data.message);
         console.log(res.error.data.message);
       }
       if (res) {
+        localStorage.setItem("token", res?.data?.attributes?.tokens?.accessToken);
+        localStorage.setItem("user", JSON.stringify(res?.data?.attributes?.userWithoutPassword));
         dispatch(
           loggedUser({
             token: res?.token
           })
         );
         toast.success(res?.message);
+        navigate("/");
       }
-
-      navigate("/");
 
 
     } catch (error) {
-      toast.error("Something went wrong");
+      toast.error(error?.data?.message, "Something went wrong");
     }
   };
 

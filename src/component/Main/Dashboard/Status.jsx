@@ -7,7 +7,7 @@ const Status = () => {
 
 
   return (
-    <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-5">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
       <div className="flex justify-between items-center p-5 rounded-lg border-2 border-gray-200">
         <div className="size-20 p-3 flex justify-center items-center rounded-full bg-[#778beb] text-white  ">
           <FaUserCircle className="size-10" />
