@@ -1,24 +1,46 @@
-import React, { useState } from 'react';
-import { Modal, Button, Input, Form, Upload, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button, Input, message, Pagination } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { useCreateServiceMutation, useEditServiceMutation, useGetAllServicesQuery } from '../../redux/features/allServices/allServices';
+import Url from '../../redux/baseApi/forImageUrl';
 
 const AllServices = () => {
-    const [services, setServices] = useState([{ id: 1, name: 'AC-Repair', image: null }]); // Sample service with image
+    const pageSize = 10; // Number of items per page
+    const [currentPage, setCurrentPage] = useState(1); // Current page
+    const [totalServices, setTotalServices] = useState(0); // Total number of services
+
+    // Fetch services based on the current page and page size
+    const { data, isLoading, isError, refetch } = useGetAllServicesQuery({
+        page: currentPage,
+        limit: pageSize
+    });
+
+    const fullServicesData = data?.data?.attributes?.results || [];
+    const totalCount = data?.data?.attributes?.totalCount || 0; // Total number of services
+
+    const [services, setServices] = useState(fullServicesData);
+
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentService, setCurrentService] = useState(null); // To track which service is being edited
-    const [formAdd] = Form.useForm(); // AntD form for Add modal
-    const [formEdit] = Form.useForm(); // AntD form for Edit modal
+
+    // API hooks
+    const [createService] = useCreateServiceMutation();
+
+    useEffect(() => {
+        if (data) {
+            setServices(data?.data?.attributes?.results); // Set services when data is fetched
+            setTotalServices(totalCount); // Set total count for pagination
+        }
+    }, [data]);
 
     const openAddModal = () => {
         setIsAddModalOpen(true);
-        formAdd.resetFields(); // Reset form for Add modal
     };
 
     const openEditModal = (service) => {
         setCurrentService(service);
         setIsEditModalOpen(true);
-        formEdit.setFieldsValue({ serviceName: service.name }); // Pre-fill service name in Edit modal
     };
 
     const closeAddModal = () => {
@@ -30,58 +52,123 @@ const AllServices = () => {
         setCurrentService(null);
     };
 
-    const handleAddService = (values) => {
-        const newService = {
-            id: services.length + 1,
-            name: values.serviceName,
-            image: values.image ? values.image.file.originFileObj : null, // Store image file
-        };
-        setServices([...services, newService]);
-        closeAddModal();
+    // Handle Add Service
+    const handleAddService = async (event) => {
+        event.preventDefault();
+        const serviceName = event.target.serviceName.value;
+        const image = event.target.image.files[0];
+
+
+        if (serviceName && image) {
+            const formData = new FormData();
+            formData.append("attachments", image);
+            formData.append("name", serviceName);
+
+            try {
+                const response = await createService(formData).unwrap(); // Call API to add service
+                if (response?.data) {
+                    setServices([...services, response.data]); // Update services state
+                    closeAddModal();
+                    message.success('Service added successfully!');
+                }
+            } catch (error) {
+                message.error('Failed to add service.');
+            }
+        } else {
+            message.error('Please provide a service name and upload an image.');
+        }
     };
 
-    const handleEditService = (values) => {
-        const updatedService = {
-            id: currentService.id,
-            name: values.serviceName,
-            image: values.image ? values.image.file.originFileObj : currentService.image, // Update image if new
-        };
-        setServices(services.map(service => (service.id === currentService.id ? updatedService : service)));
-        closeEditModal();
+    const [updateService, { isLoading: isUpdating }] = useEditServiceMutation();
+    // Handle Edit Service
+    const handleEditService = async (event) => {
+        event.preventDefault();
+        const serviceName = event.target.serviceName.value;
+        const image = event.target.image.files[0];
+        const isVisible = event.target.isVisible.checked;
+
+        const formData = new FormData();
+        if (image) {
+            formData.append("attachments", image);
+        }
+        if (serviceName) {
+            formData.append("name", serviceName);
+        }
+        if (isVisible) {
+            formData.append("isVisible", isVisible);
+        }
+
+        try {
+            const response = await updateService({ id : currentService._ServiceCategoryId, formData: formData}); // Call API to update service
+            if (response?.data) {
+                closeEditModal();
+                refetch();
+                message.success('Service updated successfully!');
+            }
+        } catch (error) {
+            message.error('Failed to update service.');
+        }
     };
 
-    const handleDeleteService = (id) => {
-        setServices(services.filter(service => service.id !== id));
+    // Handle Delete Service
+    const handleDeleteService = async (id) => {
+        try {
+            const response = await deleteService(id); // Call API to delete service
+            if (response?.data) {
+                setServices(services.filter(service => service._ServiceCategoryId !== id));
+                message.success('Service deleted successfully!');
+            }
+        } catch (error) {
+            message.error('Failed to delete service.');
+        }
+    };
+
+    // Handle page change
+    const onPageChange = (page) => {
+        setCurrentPage(page);
     };
 
     return (
         <div className='p-5'>
-            <div className="flex justify-between items-center mb-4 ">
+            <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-semibold">All Services</h1>
-                <button type="primary" onClick={openAddModal} className="bg-[#778beb]  text-white px-8 !py-2 rounded">
+                <button type="primary" onClick={openAddModal} className="bg-[#778beb] text-white px-8 !py-2 rounded">
                     Add Service
                 </button>
             </div>
 
-            <div className="space-y-4 grid lg:grid-cols-4 sm:grid-cols-2 gap-10">
-                {services.map(service => (
-                    <div key={service.id} className=" p-4 border-2 border-[#778beb] rounded-lg">
-                        <div className="">
-                            <div className="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center">
-                                <span className="text-[#778beb]">{service.name.charAt(0)}</span> {/* Display first letter of service */}
+            <div className="grid lg:grid-cols-4 sm:grid-cols-2 items-start gap-5">
+                {fullServicesData?.map(service => (
+                    <div key={service.id} className="p-4 border-2 border-[#778beb] rounded-lg">
+                        <div className="flex items-start justify-between">
+                            <div className="bg-[#778aeb5e] rounded-full w-24 h-24 flex items-center justify-center">
+                                <img className="w-20 h-20 rounded-full" src={service?.attachments[0]?.attachment?.includes('amazonaws') ? service?.attachments[0]?.attachment : (Url + service?.attachments[0]?.attachment)} alt="" />
                             </div>
+                            <span className={`${service?.isVisible ? 'text-green-500' : 'text-red-500'}`}>{service?.isVisible ? 'Active' : 'Inactive'}</span>
                         </div>
-                        <span className="text-2xl font-semibold block my-5 border-b border-dashed">{service.name}</span>
+                        <span className="text-2xl font-semibold block my-5 border-b border-dashed">{service?.name?.en}</span>
                         <div className="flex gap-4">
                             <Button type="default" onClick={() => openEditModal(service)} className="bg-[#778beb] text-white px-4 py-2 rounded">
                                 Edit
                             </Button>
-                            <Button type="danger" onClick={() => handleDeleteService(service.id)} className="border border-[#778beb] text-[#778beb] px-4 py-2 rounded">
+                            <Button type="danger" onClick={() => handleDeleteService(service._ServiceCategoryId)} className="border border-[#778beb] text-[#778beb] px-4 py-2 rounded">
                                 Delete
                             </Button>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Pagination */}
+            <div className='flex justify-end'>
+                <Pagination
+                    current={currentPage}
+                    total={totalServices}
+                    pageSize={pageSize}
+                    onChange={onPageChange}
+                    showSizeChanger={false}
+                    className="mt-5"
+                />
             </div>
 
             {/* Add Service Modal */}
@@ -91,38 +178,22 @@ const AllServices = () => {
                 onCancel={closeAddModal}
                 footer={null}
             >
-                <Form form={formAdd} onFinish={handleAddService}>
-                    <Form.Item
-                        name="serviceName"
-                        rules={[{ required: true, message: 'Please input the service name!' }]}
-                    >
-                        <span>Service Name</span>
-                        <Input className='block mt-2' />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="image"
-                        valuePropName="file"
-                        getValueFromEvent={(e) => e && e.fileList}
-                        rules={[{ required: true, message: 'Please upload an image!' }]}
-                    >
-                        <span className='block mb-2'>Upload Image</span>
-                        <Upload
-                            name="image"
-                            listType="picture"
-                            beforeUpload={() => false} // Prevent automatic upload
-                        >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
-                    </Form.Item>
-
-                    <div className="flex justify-end gap-4">
-                        <Button onClick={closeAddModal}>Cancel</Button>
-                        <Button type="primary" htmlType="submit">
-                            Save
-                        </Button>
+                <form onSubmit={handleAddService}>
+                    <div>
+                        <label>Service Name</label>
+                        <Input name="serviceName" placeholder="Enter the service name" className="block mt-2 py-2" />
                     </div>
-                </Form>
+
+                    <div className="mt-4">
+                        <label>Upload Image</label>
+                        <input type="file" name="image" className="block mt-2" />
+                    </div>
+
+                    <div className="flex justify-end gap-4 mt-4">
+                        <Button onClick={closeAddModal}>Cancel</Button>
+                        <Button type="primary" htmlType="submit">Save</Button>
+                    </div>
+                </form>
             </Modal>
 
             {/* Edit Service Modal */}
@@ -132,37 +203,29 @@ const AllServices = () => {
                 onCancel={closeEditModal}
                 footer={null}
             >
-                <Form form={formEdit} onFinish={handleEditService} initialValues={{ serviceName: currentService?.name }}>
-                    <Form.Item
-                        label="Service Name"
-                        name="serviceName"
-                        rules={[{ required: true, message: 'Please input the service name!' }]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Upload Image"
-                        name="image"
-                        valuePropName="file"
-                        getValueFromEvent={(e) => e && e.fileList}
-                    >
-                        <Upload
-                            name="image"
-                            listType="picture"
-                            beforeUpload={() => false} // Prevent automatic upload
-                        >
-                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                        </Upload>
-                    </Form.Item>
-
-                    <div className="flex justify-end gap-4">
-                        <Button onClick={closeEditModal}>Cancel</Button>
-                        <Button type="primary" htmlType="submit">
-                            Save
-                        </Button>
+                <form onSubmit={handleEditService}>
+                    <div>
+                        <label>Service Name</label>
+                        <Input name="serviceName" defaultValue={currentService?.name?.en} className="block mt-2 py-2" />
                     </div>
-                </Form>
+
+                    <div className="my-4">
+                        <label>Upload Image</label>
+                        <input type="file" name="image" className="block mt-2" />
+                    </div>
+
+                    <div>
+                        <select value={currentService?.isVisible} className='w-full mb-2 border p-2 rounded-lg' name="isVisible" id="">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div className="flex justify-end gap-4 mt-4">
+                        <Button onClick={closeEditModal}>Cancel</Button>
+                        <Button type="primary" htmlType="submit">Save</Button>
+                    </div>
+                </form>
             </Modal>
         </div>
     );
