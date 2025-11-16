@@ -115,7 +115,7 @@ const ProviderListNewProviderRequest = () => {
                         />
                     </Item>
                     <Item>
-                        <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-black">
+                        <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-white">
                             <IoIosSearch className="size-5" />
                         </button>
                     </Item>
