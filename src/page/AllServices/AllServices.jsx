@@ -18,6 +18,8 @@ const AllServices = () => {
     const fullServicesData = data?.data?.attributes?.results || [];
     const totalCount = data?.data?.attributes?.totalCount || 0; // Total number of services
 
+    console.log(fullServicesData)
+
     const [services, setServices] = useState(fullServicesData);
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -85,7 +87,8 @@ const AllServices = () => {
         event.preventDefault();
         const serviceName = event.target.serviceName.value;
         const image = event.target.image.files[0];
-        const isVisible = event.target.isVisible.checked;
+        const isVisible = event.target.isVisible.value;
+        console.log(image)
 
         const formData = new FormData();
         if (image) {
@@ -95,11 +98,12 @@ const AllServices = () => {
             formData.append("name", serviceName);
         }
         if (isVisible) {
-            formData.append("isVisible", isVisible);
+            formData.append("isVisible", isVisible );
         }
 
         try {
             const response = await updateService({ id: currentService._ServiceCategoryId, formData: formData }); // Call API to update service
+            console.log(response)
             if (response?.data) {
                 closeEditModal();
                 refetch();
@@ -220,7 +224,7 @@ const AllServices = () => {
                     </div>
 
                     <div>
-                        <select value={currentService?.isVisible} className='w-full mb-2 border p-2 rounded-lg' name="isVisible" id="">
+                        <select defaultValue={currentService?.isVisible} className='w-full mb-2 border p-2 rounded-lg' name="isVisible" id="">
                             <option value="true">Active</option>
                             <option value="false">Inactive</option>
                         </select>

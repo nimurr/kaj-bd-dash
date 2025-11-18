@@ -12,7 +12,7 @@ const { Item } = Form;
 
 const Users = () => {
   const [fromDate, setFromDate] = useState('2024-01-01');
-  const [toDate, setToDate] = useState('2222-12-31');
+  const [toDate, setToDate] = useState('3222-12-31');
   const [searchData, setSearchData] = useState('');
 
   const { data, isLoading } = useGetAllUsersQuery({ from: fromDate, to: toDate, searchData });

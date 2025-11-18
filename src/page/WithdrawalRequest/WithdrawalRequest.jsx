@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Table, Select, Button, Modal, ConfigProvider } from 'antd';
+import { Table, Select, Button, Modal, ConfigProvider, Form, DatePicker, Input } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { FaArrowLeft } from 'react-icons/fa';
+import Item from 'antd/es/list/Item';
+import { IoIosSearch } from 'react-icons/io';
+import { useGetWithdrawalQuery } from '../../redux/features/withdrawal/withdrawal';
 
 const { Option } = Select;
 
@@ -44,32 +47,22 @@ const WithdrawalRequest = () => {
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
     const [modalData, setModalData] = useState(null); // Data to display in the modal
 
+    const [searchText, setSearchText] = useState("");
+    const [selectedDate, setSelectedDate] = useState([null, null]);  // Store fromDate and toDate
+
     const handleFilterChange = (value) => {
         setSelectedFilter(value);
         filterData(value);
     };
 
-    const filterData = (filterOption) => {
-        const currentDate = moment();
-        let filtered;
+    const [fromDate, setFromDate] = useState('2024-01-01');
+    const [toDate, setToDate] = useState('3222-12-31');
+    const [status, setStatus] = useState('rejected');
 
-        switch (filterOption) {
-            case '1 Month':
-                filtered = data.filter((item) =>
-                    moment(item.requestDate).isAfter(currentDate.subtract(1, 'months'))
-                );
-                break;
-            case '3 Month':
-                filtered = data.filter((item) =>
-                    moment(item.requestDate).isAfter(currentDate.subtract(3, 'months'))
-                );
-                break;
-            default:
-                filtered = data; // No filtering, show all records
-                break;
-        }
-        setFilteredData(filtered);
-    };
+    const { data: withdrawalData } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
+    const fullwithdrawalData = withdrawalData?.data?.attributes?.results;
+    console.log(fullwithdrawalData)
+
 
     // Define the handleShowDetails function
     const handleShowDetails = (record) => {
@@ -95,24 +88,25 @@ const WithdrawalRequest = () => {
         },
         {
             title: 'A/C Number',
-            dataIndex: 'accountNumber',
-            key: 'accountNumber',
+            dataIndex: 'bankAccountNumber',
+            key: 'bankAccountNumber',
         },
         {
             title: 'Withdraw Amount',
-            dataIndex: 'withdrawAmount',
-            key: 'withdrawAmount',
+            dataIndex: 'requestedAmount',
+            key: 'requestedAmount',
         },
         {
             title: 'Request Date',
-            dataIndex: 'requestDate',
-            key: 'requestDate',
+            dataIndex: 'requestedAt',
+            key: 'requestedAt',
+            render: (s) => <span>{moment(s).format("DD MMM YYYY")}</span>
         },
         {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (s) => <span className={`${s == "Pending" ? "text-yellow-500" : "text-green-600"} `}>{s}</span>
+            render: (s) => <span className={`capitalize ${s == "Pending" ? "text-yellow-500" : "text-green-600"} `}>{s}</span>
         },
         {
             title: 'Action',
@@ -136,18 +130,23 @@ const WithdrawalRequest = () => {
                 <div className="flex items-center justify-between gap-5">
                     <h1 className="text-2xl font-semibold mb-4">Withdrawal Requests</h1>
                     {/* Filter by Period */}
-                    <div className="mb-4">
-                        <h3 className="text-lg">Filter by</h3>
-                        <Select
-                            value={selectedFilter}
-                            onChange={handleFilterChange}
-                            style={{ width: '150px' }}
-                            placeholder="Select Time Period"
-                        >
-                            <Option value="All">All</Option>
-                            <Option value="1 Month">1 Month</Option>
-                            <Option value="3 Month">3 Months</Option>
-                        </Select>
+                    <div className="mb-4 flex items-center flex-wrap">
+                        <Form layout="inline" className="flex space-x-2 gap-2 flex-wrap">
+                            <Item name="fromDate">
+                                <DatePicker
+                                    className="rounded-md border border-[#778beb]"
+                                    onChange={(date) => setSelectedDate([date, selectedDate[1]])}
+                                    placeholder="From Date"
+                                />
+                            </Item>
+                            <Item name="toDate">
+                                <DatePicker
+                                    className="rounded-md border border-[#778beb]"
+                                    onChange={(date) => setSelectedDate([selectedDate[0], date])}
+                                    placeholder="To Date"
+                                />
+                            </Item>
+                        </Form>
                     </div>
                 </div>
 
@@ -167,7 +166,7 @@ const WithdrawalRequest = () => {
 
                         <Table
                             columns={columns}
-                            dataSource={filteredData}
+                            dataSource={fullwithdrawalData}
                             pagination={false}
                             rowKey="key"
                         />
