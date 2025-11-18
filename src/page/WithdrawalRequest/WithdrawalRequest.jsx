@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Select, Button, Modal, ConfigProvider, Form, DatePicker, Input } from 'antd';
+import { Table, Select, Button, Modal, ConfigProvider, Form, DatePicker, Input, message } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { FaArrowLeft } from 'react-icons/fa';
 import { IoIosSearch } from 'react-icons/io';
-import { useGetWithdrawalQuery } from '../../redux/features/withdrawal/withdrawal';
+import { useApproveAndRejectMutation, useGetWithdrawalQuery } from '../../redux/features/withdrawal/withdrawal';
 import Url from '../../redux/baseApi/forImageUrl';
 import Item from 'antd/es/list/Item';
 
@@ -19,7 +19,7 @@ const WithdrawalRequest = () => {
     const [fromDate, setFromDate] = useState('2024-01-01');
     const [toDate, setToDate] = useState('3222-12-31');
     const [status, setStatus] = useState('rejected');
-    const { data: withdrawalData } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
+    const { data: withdrawalData, refetch } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
     const fullwithdrawalData = withdrawalData?.data?.attributes?.results;
 
     // Update data based on search text and selected date range
@@ -114,6 +114,72 @@ const WithdrawalRequest = () => {
         },
     ];
 
+    const [proof, setProof] = useState(null);
+    const handleUploadProof = (e) => {
+        // Handle upload proof logic
+        const file = e.target.files[0];
+        setProof(file);
+    };
+
+    const [acceptAndReject] = useApproveAndRejectMutation();
+    console.log(modalData)
+
+    const handleApprove = async () => {
+
+        if (!proof) return message.error("Please upload proof of payment.");
+        const formData = new FormData();
+        formData.append("proofOfPayment", proof);
+        formData.append("status", "accept");
+
+        try {
+
+            const res = await acceptAndReject({ id: modalData._WithdrawalRequstId, data: formData });
+            console.log(res);
+            if (res?.error) {
+                message.error(res?.error?.data?.message);
+            }
+            if (res?.data) {
+                message.success(res?.data?.message);
+                handleCloseModal();
+                refetch();
+                setProof(null);
+            }
+
+        } catch (error) {
+
+        }
+
+    };
+
+    const handleReject = async () => {
+
+        if (!proof) return message.error("Please upload proof of payment.");
+        const formData = new FormData();
+        formData.append("proofOfPayment", proof);
+        formData.append("status", "reject");
+
+        try {
+
+            const res = await acceptAndReject({ id: modalData._WithdrawalRequstId, data: formData });
+            console.log(res);
+            if (res?.error) {
+                message.error(res?.error?.data?.message);
+            }
+            if (res?.data) {
+                message.success(res?.data?.message);
+                handleCloseModal();
+                refetch();
+                setProof(null);
+            }
+
+        } catch (error) {
+            message.error("Something went wrong");
+        }
+
+    };
+
+
+
     return (
         <div className="p-5">
             <div>
@@ -136,18 +202,12 @@ const WithdrawalRequest = () => {
                                     placeholder="To Date"
                                 />
                             </Item>
-                            {/* <Item name="search">
-                                <Input
-                                    className="rounded-md w-[70%] md:w-full border border-[#778beb]"
-                                    placeholder="Search by Provider Name, Bank Name, or Amount"
-                                    onChange={(e) => setSearchText(e.target.value)}
-                                />
-                            </Item>
-                            <Item>
-                                <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-white">
-                                    <IoIosSearch className="size-5" />
-                                </button>
-                            </Item> */}
+                            <div>
+                                <select className='py-1 px-5 rounded border border-[#778beb]' onChange={(e) => setStatus(e.target.value)} name="status" id="">
+                                    <option value="rejected">Rejected</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
                         </Form>
                     </div>
                 </div>
@@ -186,7 +246,7 @@ const WithdrawalRequest = () => {
                 {modalData && (
                     <div className="w-full border-2 border-[#778beb] p-2 rounded-lg relative">
                         {/* Provider Profile Section */}
-                        <div className="flex items-center justify-between gap-5 mb-5">
+                        <div className="flex items-center justify-between flex-wrap gap-5 mb-5">
                             <div className="flex items-center gap-5">
                                 <img
                                     className="w-24 h-24 rounded-full"
@@ -194,6 +254,10 @@ const WithdrawalRequest = () => {
                                     alt="Provider"
                                 />
                                 <h1 className="text-2xl font-semibold">{modalData?.userId?.name || "N/A"}</h1>
+                            </div>
+                            <div className='flex items-center gap-3'>
+                                <button onClick={handleApprove} className='py-3 px-8 bg-[#778beb] text-white rounded-lg'>Approve</button>
+                                <button onClick={handleReject} className='py-3 px-8 border border-[#778beb] text-[#778beb] rounded-lg'>Reject</button>
                             </div>
                         </div>
 
@@ -225,8 +289,12 @@ const WithdrawalRequest = () => {
                                 <span className="font-semibold block">Other Documents</span>
                                 <div>
                                     <span>Proof Of Payment </span>
-                                    <img className="w-full mt-1" src={modalData?.proofOfPayment[0]?.includes('amazonaws') ? modalData?.proofOfPayment[0] : Url + modalData?.proofOfPayment[0]} alt="" />
+                                    <img className="w-full mt-1" src={modalData?.proofOfPayment[0]?.attachment?.includes('amazonaws') ? modalData?.proofOfPayment[0]?.attachment : Url + modalData?.proofOfPayment[0]?.attachment} alt="" />
                                 </div>
+                            </div>
+                            <div>
+                                <span className="font-semibold block mb-2">Proof Of Payment</span>
+                                <input onChange={handleUploadProof} type="file" name="proofOfPayment" id="" />
                             </div>
                         </div>
                     </div>

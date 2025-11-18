@@ -7,8 +7,17 @@ const withdrawalApi = baseApi.injectEndpoints({
                 url: `/withdrawal-requst/paginate/for-admin?from=${from}&to=${to}&status=${status}`,
                 method: "GET",
             }),
+            providesTags: ["Withdrawal"],
+        }),
+        approveAndReject: builder.mutation({
+            query: ({ id, data }) => ({
+                url: `/withdrawal-requst/${id}`,
+                method: "PUT",
+                body: data,
+            }),
+            invalidatesTags: ["Withdrawal"],
         }),
     }),
 });
 
-export const { useGetWithdrawalQuery } = withdrawalApi;
+export const { useGetWithdrawalQuery , useApproveAndRejectMutation } = withdrawalApi;
