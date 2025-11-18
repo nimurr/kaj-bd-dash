@@ -1,68 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Select, Button, Modal, ConfigProvider, Form, DatePicker, Input } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { FaArrowLeft } from 'react-icons/fa';
-import Item from 'antd/es/list/Item';
 import { IoIosSearch } from 'react-icons/io';
 import { useGetWithdrawalQuery } from '../../redux/features/withdrawal/withdrawal';
+import Url from '../../redux/baseApi/forImageUrl';
+import Item from 'antd/es/list/Item';
 
 const { Option } = Select;
 
-// Sample data for the table
-const data = [
-    {
-        key: '1',
-        providerName: 'Imran Khan',
-        bankName: 'ABC Bank',
-        accountNumber: '2131135313131313',
-        withdrawAmount: 150,
-        requestDate: '2025-09-12',
-        status: 'Pending',
-        userImage: 'https://via.placeholder.com/150', // Sample image URL
-        email: 'support@gmail.com',
-        phoneNumber: '12333333333',
-        address: 'Rangpur Bangladesh',
-    },
-    {
-        key: '2',
-        providerName: 'Ali Ahmed',
-        bankName: 'XYZ Bank',
-        accountNumber: '987654321',
-        withdrawAmount: 3000,
-        requestDate: '2025-06-12',
-        status: 'Completed',
-        userImage: 'https://via.placeholder.com/150', // Sample image URL
-        email: 'ali.ahmed@gmail.com',
-        phoneNumber: '987654321',
-        address: 'Dhaka, Bangladesh',
-    },
-    // More records as needed
-];
-
 // Define columns for the table
 const WithdrawalRequest = () => {
-    const [selectedFilter, setSelectedFilter] = useState('All');
-    const [filteredData, setFilteredData] = useState(data); // Store filtered data
     const [isModalVisible, setIsModalVisible] = useState(false); // Modal visibility state
     const [modalData, setModalData] = useState(null); // Data to display in the modal
-
-    const [searchText, setSearchText] = useState("");
-    const [selectedDate, setSelectedDate] = useState([null, null]);  // Store fromDate and toDate
-
-    const handleFilterChange = (value) => {
-        setSelectedFilter(value);
-        filterData(value);
-    };
-
+    const [searchText, setSearchText] = useState(""); // Search text
+    const [selectedDate, setSelectedDate] = useState([null, null]); // Store fromDate and toDate
     const [fromDate, setFromDate] = useState('2024-01-01');
     const [toDate, setToDate] = useState('3222-12-31');
     const [status, setStatus] = useState('rejected');
-
     const { data: withdrawalData } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
     const fullwithdrawalData = withdrawalData?.data?.attributes?.results;
-    console.log(fullwithdrawalData)
 
+    // Update data based on search text and selected date range
+    const [dataSource, setDataSource] = useState(fullwithdrawalData); // Initialize with full withdrawal data
+
+    useEffect(() => {
+        if (!fullwithdrawalData) return;
+
+        let filteredData = fullwithdrawalData;
+
+        // Apply search filter
+        if (searchText.trim() !== "") {
+            filteredData = filteredData.filter(
+                (request) =>
+                    request.userId?.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+                    request.bankName?.toLowerCase().includes(searchText.toLowerCase()) ||
+                    String(request.requestedAmount).includes(searchText)
+            );
+        }
+
+        // Apply date filter
+        if (selectedDate[0] && selectedDate[1]) {
+            const from = selectedDate[0].startOf("day").toISOString();
+            const to = selectedDate[1].endOf("day").toISOString();
+
+            filteredData = filteredData.filter(
+                (request) => moment(request.requestedAt).isBetween(from, to, null, '[]')
+            );
+        }
+
+        setDataSource(filteredData);
+    }, [searchText, selectedDate, fullwithdrawalData]);
 
     // Define the handleShowDetails function
     const handleShowDetails = (record) => {
@@ -78,8 +67,9 @@ const WithdrawalRequest = () => {
     const columns = [
         {
             title: 'Provider Name',
-            dataIndex: 'providerName',
-            key: 'providerName',
+            dataIndex: 'userId',
+            key: 'userId',
+            render: (s) => <span>{s?.name}</span>
         },
         {
             title: 'Bank Name',
@@ -106,7 +96,7 @@ const WithdrawalRequest = () => {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (s) => <span className={`capitalize ${s == "Pending" ? "text-yellow-500" : "text-green-600"} `}>{s}</span>
+            render: (s) => <span className={`capitalize ${s === "Pending" ? "text-yellow-500" : "text-green-600"}`}>{s}</span>
         },
         {
             title: 'Action',
@@ -146,6 +136,18 @@ const WithdrawalRequest = () => {
                                     placeholder="To Date"
                                 />
                             </Item>
+                            {/* <Item name="search">
+                                <Input
+                                    className="rounded-md w-[70%] md:w-full border border-[#778beb]"
+                                    placeholder="Search by Provider Name, Bank Name, or Amount"
+                                    onChange={(e) => setSearchText(e.target.value)}
+                                />
+                            </Item>
+                            <Item>
+                                <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-white">
+                                    <IoIosSearch className="size-5" />
+                                </button>
+                            </Item> */}
                         </Form>
                     </div>
                 </div>
@@ -163,15 +165,13 @@ const WithdrawalRequest = () => {
                             },
                         }}
                     >
-
                         <Table
                             columns={columns}
-                            dataSource={fullwithdrawalData}
+                            dataSource={dataSource}
                             pagination={false}
                             rowKey="key"
                         />
                     </ConfigProvider>
-
                 </div>
             </div>
 
@@ -185,16 +185,15 @@ const WithdrawalRequest = () => {
             >
                 {modalData && (
                     <div className="w-full border-2 border-[#778beb] p-2 rounded-lg relative">
-
                         {/* Provider Profile Section */}
                         <div className="flex items-center justify-between gap-5 mb-5">
                             <div className="flex items-center gap-5">
                                 <img
                                     className="w-24 h-24 rounded-full"
-                                    src="../../../public/logo/userimage.png"  // Placeholder image
+                                    src={modalData?.userId?.profileImage?.imageUrl?.includes('amazonaws') ? modalData?.userId?.profileImage.imageUrl : Url + modalData?.userId?.profileImage?.imageUrl}
                                     alt="Provider"
                                 />
-                                <h1 className="text-2xl font-semibold">Imran Khan</h1>
+                                <h1 className="text-2xl font-semibold">{modalData?.userId?.name || "N/A"}</h1>
                             </div>
                         </div>
 
@@ -202,41 +201,31 @@ const WithdrawalRequest = () => {
                         <div className="space-y-3">
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold">Name</span>
-                                <span>Imran Khan</span>
-                            </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Work Type</span>
-                                <span>AC-repair</span>
-                            </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Years of Experience</span>
-                                <span>4 Years</span>
+                                <span>{modalData?.userId?.name || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold">Email</span>
-                                <span>Support@gmail.com</span>
+                                <span>{modalData?.userId?.email || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Phone Number</span>
-                                <span>1233333333</span>
+                                <span className="font-semibold">Bank Name</span>
+                                <span>{modalData?.bankName || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Gender</span>
-                                <span>Male</span>
+                                <span className="font-semibold">A/C Number</span>
+                                <span>{modalData?.bankAccountNumber || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Date of Birth</span>
-                                <span>11-11-1999</span>
+                                <span className="font-semibold">Requested Date</span>
+                                <span>{moment(modalData?.requestedAt).format("DD MMM YYYY") || "N/A"}</span>
                             </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Address</span>
-                                <span>Rangpur Bangladesh</span>
-                            </div>
+
+                            {/* Proof of Payment Section */}
                             <div className=" py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold block">Other Documents</span>
                                 <div>
-                                    <span>NID/Driving License/Passport (Font Side) Image </span>
-                                    <img className="w-full mt-1" src="https://imgv2-1-f.scribdassets.com/img/document/658369930/original/352985ad62/1?v=1" alt="" />
+                                    <span>Proof Of Payment </span>
+                                    <img className="w-full mt-1" src={modalData?.proofOfPayment[0]?.includes('amazonaws') ? modalData?.proofOfPayment[0] : Url + modalData?.proofOfPayment[0]} alt="" />
                                 </div>
                             </div>
                         </div>
