@@ -15,7 +15,7 @@ const WorkTraker = () => {
     const [selectedMonthly, setSelectedMonthly] = useState('');
     const [dataSource, setDataSource] = useState([]);
 
-    const { data } = useGetAllWorkTrakerQuery({ from: fromDate, to: toDate , status: selectedStatus });
+    const { data } = useGetAllWorkTrakerQuery({ from: fromDate, to: toDate, status: selectedStatus });
     const fullData = data?.data?.attributes?.results;
 
     console.log(fullData)
@@ -28,27 +28,31 @@ const WorkTraker = () => {
             title: 'No',
             dataIndex: 'no',
             key: 'no',
-            render: (text , record , index) => <span>{index + 1}</span>,
+            render: (text, record, index) => <span>{index + 1}</span>,
         },
         {
             title: 'Username',
-            dataIndex: 'username',
-            key: 'username',
+            dataIndex: 'userId',
+            key: 'userId',
+            render: (text) => <span> {text?.name || 'N/A'}</span>,
         },
         {
             title: 'User Phone Number',
-            dataIndex: 'userPhoneNumber',
-            key: 'userPhoneNumber',
+            dataIndex: 'userId',
+            key: 'userId',
+            render: (text) => <span> {text?.phoneNumber || 'N/A'}</span>,
         },
         {
             title: 'Provider Name',
-            dataIndex: 'providerName',
-            key: 'providerName',
+            dataIndex: 'providerId',
+            key: 'providerId',
+            render: (text) => <span> {text?.name || 'N/A'}</span>,
         },
         {
             title: 'Provider Phone Number',
-            dataIndex: 'providerPhoneNumber',
-            key: 'providerPhoneNumber',
+            dataIndex: 'providerId',
+            key: 'providerId',
+            render: (text) => <span> {text?.phoneNumber || 'N/A'}</span>,
         },
         {
             title: 'Services Booking Date',
@@ -62,20 +66,43 @@ const WorkTraker = () => {
             key: 'status',
             render: (text) => {
                 let color = '';
+                // Apply color based on status
                 switch (text) {
                     case 'pending':
                         color = 'yellow';
                         break;
-                    case 'Cancelled':
+                    case 'cancelled':
                         color = 'red';
                         break;
                     case 'completed':
                         color = 'green';
                         break;
+                    case 'accepted':
+                        color = 'blue';
+                        break;
+                    case 'paymentRequest':
+                        color = 'purple';
+                        break;
+                    case 'inProgress':
+                        color = 'orange';
+                        break;
                     default:
-                        color = 'black';
+                        color = 'gray'; // Default color if no status matches
                 }
-                return <span className={`${color === 'yellow' && 'text-orange-500 bg-orange-100 py-1 px-3 rounded-lg'} ${color === 'red' && 'text-red-500 bg-red-100 py-1 px-3 rounded-lg'} ${color === 'green' && 'text-green-500 bg-green-100 py-1 px-3 rounded-lg'}`}>{text}</span>;
+                return (
+                    <span
+                        className={`${color === 'yellow' && 'text-orange-500 bg-orange-100 py-1 px-3 rounded-lg'
+                            } ${color === 'red' && 'text-red-500 bg-red-100 py-1 px-3 rounded-lg'
+                            } ${color === 'green' && 'text-green-500 bg-green-100 py-1 px-3 rounded-lg'
+                            } ${color === 'blue' && 'text-blue-500 bg-blue-100 py-1 px-3 rounded-lg'
+                            } ${color === 'purple' && 'text-purple-500 bg-purple-100 py-1 px-3 rounded-lg'
+                            } ${color === 'orange' && 'text-orange-500 bg-orange-100 py-1 px-3 rounded-lg'
+                            } ${color === 'gray' && 'text-gray-500 bg-gray-100 py-1 px-3 rounded-lg'
+                            }`}
+                    >
+                        {text}
+                    </span>
+                );
             },
         },
     ];
@@ -142,10 +169,13 @@ const WorkTraker = () => {
                         style={{ width: '150px' }}
                         placeholder="Select Status"
                     >
-                        <Option value="">Work Status</Option>
+                        <Option value="">All</Option>
+                        <Option value="accepted">Accepted</Option>
                         <Option value="completed">Completed</Option>
-                        <Option value="Cancelled">Cancelled</Option>
-                        <Option value="In Progress">In Progress</Option>
+                        <Option value="cancelled">Cancelled</Option>
+                        <Option value="pending">Pending</Option>
+                        <Option value="paymentRequest">Payment Request</Option>
+                        <Option value="inProgress">In Progress</Option>
                     </Select>
                 </div>
             </div>
