@@ -64,7 +64,7 @@ const sidebarItems = [
   },
   {
     path: "/others-settings",
-    name: "Others Settings",
+    name: "Others",
     icon: <VscSettings className="size-6" />,
   },
 ];

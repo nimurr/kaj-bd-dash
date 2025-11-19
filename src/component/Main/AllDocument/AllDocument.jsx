@@ -172,7 +172,7 @@ const AllDocument = () => {
                 <div>
                     <input
                         type="number"
-                        value={percentage}  // Bind the input value to state
+                        defaultValue={existingPercentage}  // Bind the input value to state
                         onChange={handlePercentageChange}  // Update state on change
                         placeholder='Enter Percentage'
                         className='w-full px-5 py-2 text-[16px] border border-[#778beb] outline-none focus:border-[#778beb] focus:border-2 text-[#778beb] rounded-lg resize-none'
