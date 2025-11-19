@@ -16,6 +16,7 @@ import { GoHomeFill } from "react-icons/go";
 import { GrDocumentImage } from "react-icons/gr";
 import { RxCross1 } from "react-icons/rx";
 import { CgLoadbarDoc } from "react-icons/cg";
+import { VscSettings } from "react-icons/vsc";
 
 const sidebarItems = [
   {
@@ -56,52 +57,15 @@ const sidebarItems = [
   },
 
 
-
-
-  // {
-  //   path: "/subscription",
-  //   name: "Subscription ",
-  //   icon: <MdOutlineContactPage className="size-6" />,
-  // },
-  // {
-  //   path: "/earnings",
-  //   name: "Earnings ",
-  //   icon: <FaRegMoneyBill1 className="size-6" />,
-  // },
-  // {
-  //   path: "/user-request",
-  //   name: "Super User Request",
-  //   icon: <FaBriefcase className="size-6" />,
-  // },
-  // {
-  //   path: "/allevent",
-  //   name: "All Tournament",
-  //   icon: <FaBriefcase className="size-6" />,
-  // },
-  // {
-  //   path: "/subscription",
-  //   name: "Subscription",
-  //   icon: <FaCopy className="size-6" />,
-  // },
-  // {
-  //   path: "/earnings",
-  //   name: "Earnings",
-  //   icon: <FaSackDollar className="size-6" />,
-  // },
-  // {
-  //   path: "/suggestion",
-  //   name: "Suggestion",
-  //   icon: <HiLightBulb className="size-8" />,
-  // },
-  // {
-  //   path: "/Donation",
-  //   name: "Donation",
-  //   icon: <RiMoneyDollarCircleFill className="size-6" />,
-  // },
   {
     path: "/settings",
     name: "Settings",
     icon: <IoSettingsSharp className="size-6" />,
+  },
+  {
+    path: "/others-settings",
+    name: "Others Settings",
+    icon: <VscSettings className="size-6" />,
   },
 ];
 

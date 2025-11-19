@@ -183,7 +183,7 @@ const router = createBrowserRouter([
 
 
       {
-        path: "/all-document",
+        path: "/others-settings",
         element: <AllDocument />,
       },
 
