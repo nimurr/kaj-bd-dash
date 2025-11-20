@@ -13,7 +13,7 @@ const DashboardHome = () => {
     <section>
       <h1 className="text-4xl font-semibold py-5 px-3">Welcome back 👋</h1>
       <div className="px-3">
-        <Status fullData={fullData} />
+        <Status fullData={fullData} isLoading={isLoading} />
         <div className="grid grid-cols-1 lg:grid-cols-6 items-start gap-5 pt-10">
           <IncomeGraphChart fullData={fullData} />
           <Piechart fullData={fullData} />

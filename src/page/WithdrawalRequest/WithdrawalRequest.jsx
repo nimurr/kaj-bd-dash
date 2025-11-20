@@ -21,6 +21,7 @@ const WithdrawalRequest = () => {
     const [status, setStatus] = useState('rejected');
     const { data: withdrawalData, refetch } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
     const fullwithdrawalData = withdrawalData?.data?.attributes?.results;
+    console.log(fullwithdrawalData)
 
     // Update data based on search text and selected date range
     const [dataSource, setDataSource] = useState(fullwithdrawalData); // Initialize with full withdrawal data
@@ -277,8 +278,24 @@ const WithdrawalRequest = () => {
                                 <span>{modalData?.bankName || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">A/C Number</span>
+                                <span className="font-semibold">Bank Account Type</span>
+                                <span>{modalData?.bankAccountType || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
+                                <span className="font-semibold">Bank Branch</span>
+                                <span>{modalData?.bankBranch || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
+                                <span className="font-semibold">Bank Routing Number</span>
+                                <span>{modalData?.bankRoutingNumber || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
+                                <span className="font-semibold">Bank Account Number</span>
                                 <span>{modalData?.bankAccountNumber || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
+                                <span className="font-semibold">Status</span>
+                                <span className='capitalize'>{modalData?.status || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold">Requested Date</span>

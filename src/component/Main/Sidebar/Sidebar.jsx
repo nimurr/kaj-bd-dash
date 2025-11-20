@@ -52,16 +52,16 @@ const sidebarItems = [
     name: "Work Traker",
     icon: <CgLoadbarDoc className="size-6" />,
   },
-  {
-    path: "/earnings",
-    name: "Earnings",
-    icon: <SlWallet className="size-6" />,
-  },
-  {
-    path: "/transactions-history",
-    name: "Transactions History",
-    icon: <TbCalendarDollar className="size-7" />,
-  },
+  // {
+  //   path: "/earnings",
+  //   name: "Earnings",
+  //   icon: <SlWallet className="size-6" />,
+  // },
+  // {
+  //   path: "/transactions-history",
+  //   name: "Transactions History",
+  //   icon: <TbCalendarDollar className="size-7" />,
+  // },
   {
     path: "/withdrawal-request",
     name: "Withdrawal Request",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, ConfigProvider, Form, DatePicker, message, Input } from 'antd';
+import { Table, Button, Modal, ConfigProvider, Form, DatePicker, message, Input, Pagination } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Url from '../../redux/baseApi/forImageUrl';
@@ -13,10 +13,9 @@ const TransactionHistory = () => {
     const [status, setStatus] = useState('rejected');
 
     // API call to fetch transaction history
-    const { data: withdrawalData, refetch } = useGetPaymentTransactionsHistoryQuery();
+    const { data: withdrawalData, refetch, isLoading } = useGetPaymentTransactionsHistoryQuery();
     const fullwithdrawalData = withdrawalData?.attributes?.results || [];
 
-    console.log(fullwithdrawalData)
 
     // Modal visibility handler
     const handleShowDetails = (record) => {
@@ -28,47 +27,15 @@ const TransactionHistory = () => {
         setIsModalVisible(false);
         setModalData(null);
     };
-
-    // const [acceptAndReject] = useApproveAndRejectMutation();
-
-    const handleApprove = async () => {
-        const formData = new FormData();
-        formData.append("status", "accept");
-        try {
-            const res = await acceptAndReject({ id: modalData._WithdrawalRequstId, data: formData });
-            if (res?.data) {
-                message.success(res?.data?.message);
-                handleCloseModal();
-                refetch();
-            }
-        } catch (error) {
-            message.error("Failed to approve");
-        }
-    };
-
-    const handleReject = async () => {
-        const formData = new FormData();
-        formData.append("status", "reject");
-        try {
-            const res = await acceptAndReject({ id: modalData._WithdrawalRequstId, data: formData });
-            if (res?.data) {
-                message.success(res?.data?.message);
-                handleCloseModal();
-                refetch();
-            }
-        } catch (error) {
-            message.error("Failed to reject");
-        }
-    };
-
     // Filter data based on searchText and date range
-    const filteredData = fullwithdrawalData.filter((request) => {
+    const filteredData = fullwithdrawalData?.filter((request) => {
         let isValid = true;
 
         // Search filter
         if (searchText) {
             isValid = isValid && (
                 request._paymentTransactionId?.toLowerCase().includes(searchText.toLowerCase()) ||
+                request.referenceId?.toLowerCase().includes(searchText.toLowerCase()) ||
                 request.transactionId?.toLowerCase().includes(searchText.toLowerCase()) ||
                 String(request.requestedAmount).includes(searchText)
             );
@@ -102,6 +69,11 @@ const TransactionHistory = () => {
             title: 'paymentGateway',
             dataIndex: 'paymentGateway',
             key: 'paymentGateway',
+        },
+        {
+            title: 'Reference Id',
+            dataIndex: 'referenceId',
+            key: 'referenceId',
         },
         {
             title: 'Payment TransactionId',
@@ -139,8 +111,8 @@ const TransactionHistory = () => {
                 {/* Filter by Period */}
                 <Form className="flex items-center gap-5">
                     <Input
-                        className="py-1 inline px-5 min-w-[250px] rounded border border-[#778beb]"
-                        placeholder="Search by Provider, Bank, Amount"
+                        className="py-1 inline px-2 min-w-[250px] rounded border border-[#778beb]"
+                        placeholder="Search by Provider, Bank, Amount...."
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                     />
@@ -159,24 +131,39 @@ const TransactionHistory = () => {
             </div>
 
             {/* Transaction History Table */}
-            <ConfigProvider
-                theme={{
-                    components: {
-                        Table: {
-                            headerBg: "#778beb",
-                            headerColor: "#fff",
-                            headerBorderRadius: 5,
+            <div className='w-full overflow-x-auto'>
+                <ConfigProvider
+                    theme={{
+                        components: {
+                            Table: {
+                                headerBg: "#778beb",
+                                headerColor: "#fff",
+                                headerBorderRadius: 5,
+                            },
                         },
-                    },
-                }}
-            >
-                <Table
-                    columns={columns}
-                    dataSource={filteredData}
-                    pagination={false}
-                    rowKey="_paymentTransactionId"
+                    }}
+                >
+                    <Table
+                        columns={columns}
+                        dataSource={filteredData}
+                        pagination={false}
+                        loading={isLoading}
+                        rowKey="_paymentTransactionId"
+                    />
+                </ConfigProvider>
+            </div>
+
+            <div>
+                <Pagination
+                    className="my-5 flex justify-end"
+                    total={filteredData.length}
+                    pageSize={10}
+                    showSizeChanger={false}
+                    onChange={(page) => {
+                        // Handle page change if needed
+                    }}
                 />
-            </ConfigProvider>
+            </div>
 
             {/* Modal for showing details */}
             <Modal
@@ -187,11 +174,51 @@ const TransactionHistory = () => {
                 width={600}
             >
                 {modalData && (
-                    <div>
-                        hi
+                    <div className="space-y-3">
+                        {/* User Details */}
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Profile Image:</span>
+                            <img className="w-16 h-16 rounded-full" src={modalData?.userId?.profileImage?.imageUrl.includes('amazonaws') ? modalData?.userId?.profileImage?.imageUrl : Url + modalData?.userId?.profileImage?.imageUrl} alt="Profile" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">User Name:</span>
+                            <span>{modalData?.userId?.name || "N/A"}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Email:</span>
+                            <span>{modalData?.userId?.email || "N/A"}</span>
+                        </div>
+
+
+                        {/* Transaction Details */}
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Amount:</span>
+                            <span>৳{modalData?.amount}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Currency:</span>
+                            <span>{modalData?.currency}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Payment Gateway:</span>
+                            <span>{modalData?.paymentGateway}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Transaction ID:</span>
+                            <span>{modalData?.transactionId}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Payment Status:</span>
+                            <span>{modalData?.paymentStatus}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="font-semibold">Payment Intent:</span>
+                            <span>{modalData?.paymentIntent}</span>
+                        </div>
+
+
                     </div>
                 )}
-
             </Modal>
         </div>
     );
