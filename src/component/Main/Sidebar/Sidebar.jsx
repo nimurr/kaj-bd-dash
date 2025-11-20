@@ -17,6 +17,7 @@ import { GrDocumentImage } from "react-icons/gr";
 import { RxCross1 } from "react-icons/rx";
 import { CgLoadbarDoc } from "react-icons/cg";
 import { VscSettings } from "react-icons/vsc";
+import { SlWallet } from "react-icons/sl";
 
 const sidebarItems = [
   {
@@ -24,6 +25,7 @@ const sidebarItems = [
     name: "Dashboard",
     icon: <MdDashboard className="size-7" />,
   },
+
 
   {
     path: "/admins",
@@ -51,12 +53,15 @@ const sidebarItems = [
     icon: <CgLoadbarDoc className="size-6" />,
   },
   {
+    path: "/earnings",
+    name: "Earnings",
+    icon: <SlWallet className="size-6" />,
+  },
+  {
     path: "/withdrawal-request",
     name: "Withdrawal Request",
     icon: <FaBangladeshiTakaSign className="size-6" />,
   },
-
-
   {
     path: "/settings",
     name: "Settings",
