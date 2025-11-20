@@ -153,7 +153,7 @@ const WithdrawalRequest = () => {
 
     const handleReject = async () => {
 
-        if (!proof) return message.error("Please upload proof of payment.");
+        // if (!proof) return message.error("Please upload proof of payment.");
         const formData = new FormData();
         formData.append("proofOfPayment", proof);
         formData.append("status", "reject");

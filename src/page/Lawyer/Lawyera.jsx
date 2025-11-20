@@ -133,8 +133,8 @@ const Lawyera = () => {
             key: "status",
             render: (status) => <div>
                 {status == "Active" ?
-                    <span className="py-2 px-5 rounded-lg border-2 border-green-600 text-green-600">Active </span> :
-                    <span className="py-2 px-5 rounded-lg border-2 border-red-600 text-red-600">Inactive </span>
+                    <span className="py-1 px-5 rounded-lg  bg-green-100 text-green-600">Active </span> :
+                    <span className="py-1 px-5 rounded-lg  bg-red-100 text-red-600">Inactive </span>
                 }
             </div>,
         },
@@ -142,9 +142,9 @@ const Lawyera = () => {
             title: "Action",
             key: "action",
             render: (_, record) => (
-                <div className="flex gap-3">
+                <div className="flex items-center gap-3">
                     <FaInfoCircle
-                        className="text-xl cursor-pointer hover:text-blue-500"
+                        className="text-xl cursor-pointer text-gray-500 hover:text-[#778beb]"
                         onClick={() => showDetails(record)}
                     />
                     <MdDeleteForever
