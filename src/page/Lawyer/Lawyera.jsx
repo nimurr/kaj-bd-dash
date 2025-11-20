@@ -13,6 +13,7 @@ const Lawyera = () => {
     const [isEditModalVisible, setIsEditModalVisible] = useState(false); // Edit Modal visibility
     const [selectedUser, setSelectedUser] = useState(null);
     const [form] = Form.useForm();
+    const [status, setStatus] = useState("Active");
 
     // Demo data for testing
     const demoSubAdmins = [
