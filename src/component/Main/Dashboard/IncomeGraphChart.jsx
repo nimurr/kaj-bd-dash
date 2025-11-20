@@ -2,7 +2,6 @@ import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const IncomeGraphChart = ({fullData}) => {
-  console.log(fullData?.totalRevenueByMonth?.monthlyData)
   // Sample Data for Income and Expenses over the months
   const data = [
     { month: 'Jan', income: 4, expenses: 2 },
