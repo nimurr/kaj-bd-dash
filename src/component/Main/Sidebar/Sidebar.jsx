@@ -18,6 +18,7 @@ import { RxCross1 } from "react-icons/rx";
 import { CgLoadbarDoc } from "react-icons/cg";
 import { VscSettings } from "react-icons/vsc";
 import { SlWallet } from "react-icons/sl";
+import { TbCalendarDollar } from "react-icons/tb";
 
 const sidebarItems = [
   {
@@ -58,6 +59,11 @@ const sidebarItems = [
     icon: <SlWallet className="size-6" />,
   },
   {
+    path: "/transactions-history",
+    name: "Transactions History",
+    icon: <TbCalendarDollar className="size-6" />,
+  },
+  {
     path: "/withdrawal-request",
     name: "Withdrawal Request",
     icon: <FaBangladeshiTakaSign className="size-6" />,
@@ -90,8 +96,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
     <div>
       {/* Desktop Sidebar */}
       <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#778beb] fixed shadow-2xl">
-        <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 mb-10 text-black">
-          <img src={logo} alt="logo" className="w-[100px] rounded shadow-xl mb-5 " />
+        <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 mb-5 text-black">
+          <img src={logo} alt="logo" className="w-[100px] rounded shadow  " />
         </Link>
         <ul className="flex flex-col gap-5">
           {sidebarItems.map((item) => (

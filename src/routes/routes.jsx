@@ -122,10 +122,10 @@ const router = createBrowserRouter([
         path: "withdrawal-request",
         element: <WithdrawalRequest />,
       },
-      {
-        path: "subscription",
-        element: <Subscription />,
-      },
+      // {
+      //   path: "subscription",
+      //   element: <Subscription />,
+      // },
 
       {
         path: "earnings",
