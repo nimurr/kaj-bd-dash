@@ -139,7 +139,7 @@ const TransactionHistory = () => {
                 {/* Filter by Period */}
                 <Form className="flex items-center gap-5">
                     <Input
-                        className="py-1 inline px-5 rounded border border-[#778beb]"
+                        className="py-1 inline px-5 min-w-[250px] rounded border border-[#778beb]"
                         placeholder="Search by Provider, Bank, Amount"
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
