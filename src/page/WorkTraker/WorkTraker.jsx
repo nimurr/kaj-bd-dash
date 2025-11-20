@@ -10,15 +10,21 @@ const { Option } = Select;
 const WorkTraker = () => {
     const [fromDate, setFromDate] = useState('2024-01-01');
     const [toDate, setToDate] = useState('3222-12-31');
-    const [selectedMonth, setSelectedMonth] = useState(null); // For storing selected month
     const [selectedStatus, setSelectedStatus] = useState(''); // For storing selected status filter
     const [selectedMonthly, setSelectedMonthly] = useState('');
     const [dataSource, setDataSource] = useState([]);
+    const [page, setPage] = useState(1);  // Current page number
+    const [limit, setLimit] = useState(10);  // Items per page
 
-    const { data , isLoading } = useGetAllWorkTrakerQuery({ from: fromDate, to: toDate, status: selectedStatus });
+    const { data, isLoading } = useGetAllWorkTrakerQuery({
+        from: fromDate,
+        to: toDate,
+        status: selectedStatus,
+        page: page, // Pass current page number
+        limit: limit, // Pass the number of items per page
+    });
     const fullData = data?.data?.attributes?.results;
-
-    // console.log("fullData" , fullData);
+    const forPaginationData = data?.data?.attributes;
 
     const navigate = useNavigate(); // Initialize navigate for dynamic routing
 
@@ -107,6 +113,12 @@ const WorkTraker = () => {
         },
     ];
 
+    // Handle page change
+    const handlePageChange = (page, pageSize) => {
+        setPage(page);  // Update the page number
+        setLimit(pageSize);  // Update the page size
+    };
+
     // Filter the data based on the date range and status
     useEffect(() => {
         if (!data) return;
@@ -137,7 +149,6 @@ const WorkTraker = () => {
 
     // Handle row click to navigate based on the status
     const onRowClick = (record) => {
-        console.log(record)
         navigate(`/work-traker/${record.status.toLowerCase().replace(' ', '-') == "completed" ? "completed" : "others"}/${record._ServiceBookingId}`);
     };
 
@@ -197,10 +208,12 @@ const WorkTraker = () => {
                         columns={columns}
                         dataSource={dataSource}
                         pagination={{
-                            pageSize: 10, // Number of items per page
-                            total: dataSource.length, // Total number of records
+                            current: page, // Current page
+                            pageSize: limit, // Items per page
+                            total: forPaginationData?.totalPages * limit, // Total number of records
                             showSizeChanger: true, // Allow page size changer
                             pageSizeOptions: ['3', '5', '10'], // Page size options
+                            onChange: handlePageChange, // Handle page change
                         }}
                         loading={isLoading}
                         rowKey="key"
