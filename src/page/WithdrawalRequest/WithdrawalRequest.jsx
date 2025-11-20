@@ -183,7 +183,7 @@ const WithdrawalRequest = () => {
     return (
         <div className="p-5">
             <div>
-                <div className="flex items-center justify-between gap-5">
+                <div className="flex items-center flex-wrap justify-between gap-5">
                     <h1 className="text-2xl font-semibold mb-4">Withdrawal Requests</h1>
                     {/* Filter by Period */}
                     <div className="mb-4 flex items-center flex-wrap">
