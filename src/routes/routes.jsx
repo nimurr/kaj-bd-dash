@@ -108,7 +108,7 @@ const router = createBrowserRouter([
         element: <WorkTrakercompleted />,
       },
       {
-        path: "work-traker/cancelled/:id",
+        path: "work-traker/others/:id",
         element: <WorkTrakercancelled />,
       },
       {

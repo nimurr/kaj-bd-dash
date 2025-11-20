@@ -18,7 +18,7 @@ const WorkTraker = () => {
     const { data } = useGetAllWorkTrakerQuery({ from: fromDate, to: toDate, status: selectedStatus });
     const fullData = data?.data?.attributes?.results;
 
-    console.log(fullData)
+    console.log("fullData" , fullData);
 
     const navigate = useNavigate(); // Initialize navigate for dynamic routing
 
@@ -56,9 +56,9 @@ const WorkTraker = () => {
         },
         {
             title: 'Services Booking Date',
-            dataIndex: 'servicesBookingDate',
-            key: 'servicesBookingDate',
-            render: (date) => moment(date).format('DD MMM YYYY'),
+            dataIndex: 'bookingDateTime',
+            key: 'bookingDateTime', 
+            render: (text) => <span>{moment(text).format('DD MMM YYYY, h:mm A')}</span>,
         },
         {
             title: 'Status',
@@ -138,7 +138,7 @@ const WorkTraker = () => {
     // Handle row click to navigate based on the status
     const onRowClick = (record) => {
         console.log(record)
-        navigate(`/work-traker/${record.status.toLowerCase().replace(' ', '-')}/${record._ServiceBookingId}`);
+        navigate(`/work-traker/${record.status.toLowerCase().replace(' ', '-') == "completed" ? "completed" : "others"}/${record._ServiceBookingId}`);
     };
 
     return (
@@ -197,7 +197,7 @@ const WorkTraker = () => {
                         columns={columns}
                         dataSource={dataSource}
                         pagination={{
-                            pageSize: 3, // Number of items per page
+                            pageSize: 10, // Number of items per page
                             total: dataSource.length, // Total number of records
                             showSizeChanger: true, // Allow page size changer
                             pageSizeOptions: ['3', '5', '10'], // Page size options

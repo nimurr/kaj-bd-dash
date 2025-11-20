@@ -229,7 +229,6 @@ const WorkTrakercompleted = () => {
                     </div>
                 </div>
             )}
-
         </section>
     );
 };
