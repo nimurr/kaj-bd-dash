@@ -53,7 +53,7 @@ const Status = ({ fullData, isLoading }) => {
                   <div className="flex items-center justify-end">
                     <span className={`py-1 px-3 rounded-lg flex items-center  max-w-fit gap-3 ${fullData?.currentAndLastMonthUserCount?.monthlyGrowth > 0 ? "text-green-500 bg-green-100" : "text-red-500 bg-red-100"}`}>
                       {fullData?.currentAndLastMonthUserCount?.monthlyGrowth > 0 ? <IoIosTrendingUp /> : <IoTrendingDown />}
-                      {fullData?.currentAndLastMonthUserCount?.monthlyGrowth}
+                      {fullData?.currentAndLastMonthUserCount?.monthlyGrowth}%
                     </span>
                   </div>
                   Last month total  {fullData?.currentAndLastMonthUserCount?.lastMonthTotal}
@@ -75,7 +75,7 @@ const Status = ({ fullData, isLoading }) => {
                   <div className="flex items-center justify-end">
                     <span className={`py-1 px-3 rounded-lg flex items-center justify-end max-w-fit gap-3 ${fullData?.currentAndLastMonthProviderCount?.monthlyGrowth > 0 ? "text-green-500 bg-green-100" : "text-red-500 bg-red-100"}`}>
                       {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth > 0 ? <IoIosTrendingUp /> : <IoTrendingDown />}
-                      {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth}
+                      {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth}%
                     </span>
                   </div>
                   Last month total  {fullData?.currentAndLastMonthProviderCount?.lastMonthTotal}
@@ -108,7 +108,7 @@ const Status = ({ fullData, isLoading }) => {
                   <div className="flex items-center justify-end">
                     <span className={`py-1 px-3 rounded-lg flex items-center justify-end max-w-fit gap-3 ${fullData?.currentAndLastMonthProviderCount?.monthlyGrowth > 0 ? "text-green-500 bg-green-100" : "text-red-500 bg-red-100"}`}>
                       {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth > 0 ? <IoIosTrendingUp /> : <IoTrendingDown />}
-                      {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth}
+                      {fullData?.currentAndLastMonthProviderCount?.monthlyGrowth}%
                     </span>
                   </div>
                   Last month total  {fullData?.currentAndLastMonthProviderCount?.lastMonthTotal}
