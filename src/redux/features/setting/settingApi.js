@@ -4,8 +4,8 @@ const settingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
     getAllSettings: builder.query({
-      query: () => ({
-        url: "/general-info",
+      query: (type) => ({
+        url: `/settings?type=${type}`,
         method: "GET",
         providesTags: ["Setting"],
       }),
@@ -78,6 +78,14 @@ const settingApi = baseApi.injectEndpoints({
         url: "/notifications",
         method: "GET",
         providesTags: ["Notification"],
+      }),
+    }),
+
+    getPrivacyPolicy: builder.query({
+      query: () => ({
+        url: "/general-info/privacy-policy",
+        method: "GET",
+        providesTags: ["Setting"],
       }),
     }),
 

@@ -4,9 +4,16 @@ import ReactQuill from "react-quill"; // Import React Quill
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import { useState } from "react";
 import { Form, message } from "antd";
-import { useUpdatePrivacyPolicyAllMutation } from "../../redux/features/setting/settingApi"; // ✅ FIXED
+import { useGetAllSettingsQuery, useUpdatePrivacyPolicyAllMutation } from "../../redux/features/setting/settingApi"; // ✅ FIXED
 
 const EditPrivacyPolicy = () => {
+
+  const type = "privacyPolicy";
+
+  const { data: privacyPolicy, isLoading: isFetching, refetch } = useGetAllSettingsQuery(type);
+
+  console.log(privacyPolicy?.data?.attributes[0]?.details);
+
   const [form] = Form.useForm();
   const [content, setContent] = useState(""); // Default content for the privacy policy
 
@@ -46,6 +53,8 @@ const EditPrivacyPolicy = () => {
           <Form.Item name="content" initialValue={content}>
             <ReactQuill
               value={content}
+              defaultValue={privacyPolicy?.data?.attributes[0]?.details}
+              placeholder="Enter your privacy policy content here..."
               onChange={(value) => setContent(value)}
               modules={{
                 toolbar: [
