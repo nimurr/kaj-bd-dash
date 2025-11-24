@@ -20,7 +20,6 @@ const demoUserData = [
         profileImage: {
             imageUrl: "https://www.w3schools.com/w3images/avatar2.png",
         },
-        messageTitle: "Support Request",
         message: "I need help with my account Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     {
@@ -34,7 +33,6 @@ const demoUserData = [
         profileImage: {
             imageUrl: "https://www.w3schools.com/w3images/avatar6.png",
         },
-        messageTitle: "Support Request",
         message: "I need help with my account Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     },
     // Add more users as necessary for demo
@@ -181,9 +179,8 @@ const CustomerSupport = () => {
                             </div>
 
                             <div className="py-3 border-2 p-2 rounded-lg border-[#f1f1f1]">
-                                <h2 className="font-semibold mb-2 ">{userDataFull?.messageTitle}</h2>
-                                <p>{userDataFull?.message}</p>
-                                <img className="border mt-2 rounded-lg" src="https://raw.githubusercontent.com/arifpro/sslcommerz-mern-example/main/screenshots/PaymentPage2.png" alt="" />
+                                <p className="mb-3 text-gray-500">{userDataFull?.message}</p>
+                                <img className="border  rounded-lg" src="https://raw.githubusercontent.com/arifpro/sslcommerz-mern-example/main/screenshots/PaymentPage2.png" alt="" />
                             </div>
 
                         </div>
