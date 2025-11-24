@@ -8,6 +8,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { useGetUserProfileQuery, useUpdateProfileMutation } from "../../redux/features/setting/settingApi";
 import Url from "../../redux/baseApi/forImageUrl";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const PersonalinfoEdit = () => {
     const navigate = useNavigate();
@@ -135,7 +136,7 @@ const PersonalinfoEdit = () => {
                     {/* ✅ Save Changes Button */}
                     <div className="flex sm:justify-end justify-center items-center mt-8">
                         <Button htmlType="submit" className="h-14 md:px-20 !bg-[#778beb] !text-white rounded-lg text-lg font-medium">
-                            Save Changes
+                            Save  {isLoading ? 'ing...' : "Changes"}
                         </Button>
                     </div>
                 </Form>

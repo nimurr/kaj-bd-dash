@@ -10,7 +10,7 @@ import { useEffect } from "react";
 const Personalinfo = () => {
     const navigate = useNavigate();
 
-    const { data: userProfile, refetch } = useGetUserProfileQuery();
+    const { data: userProfile, refetch , isLoading } = useGetUserProfileQuery();
 
     const user = userProfile?.data?.attributes;
     console.log(user);
