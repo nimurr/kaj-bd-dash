@@ -4,6 +4,7 @@ import { FaInfoCircle, FaRegEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import Swal from "sweetalert2";
 import moment from "moment";
+import { useCreateNewAdminsMutation, useGetAdminsQuery } from "../../redux/features/admins/admins";
 
 const Lawyera = () => {
     const pageSize = 10;
@@ -22,6 +23,14 @@ const Lawyera = () => {
         { id: 3, name: "Alice Johnson", email: "alice@example.com", phone: "456789123", createdAt: "2025-09-07T09:00:00Z", status: "Active" },
         // Add more demo data as required
     ];
+
+
+    const { data, refetch } = useGetAdminsQuery({ page: currentPage, limit: pageSize });
+    const fullData = data?.data?.attributes?.results || [];
+    const pageItems = data?.data?.attributes?.totalPages || 0;
+
+    // console.log(fullData)
+
 
     // Handle "View Details" Modal
     const showDetails = (record) => {
@@ -61,27 +70,38 @@ const Lawyera = () => {
         form.resetFields();
     };
 
+    const [createNewAdmin] = useCreateNewAdminsMutation();
+
     // Handle Add Sub Admin form submission
-    const handleAddSubAdmin = (values) => {
-        const newSubAdmin = { ...values, createdAt: new Date(), id: demoSubAdmins.length + 1 };
-        demoSubAdmins.push(newSubAdmin);
+    const handleAddSubAdmin = async (values) => {
+        // const newSubAdmin = { ...values, createdAt: new Date(), id: fullData?.length + 1 };
+        // fullData?.push(newSubAdmin);
+        const fullData = {
+            ...values,
+            role: "subAdmin",
+            message: "Welcome Welcome Welcome Welcome"
+        }
 
-        message.success("Sub Admin added successfully!");
-        setIsAddModalVisible(false);
+        try {
+
+            const res = await createNewAdmin(fullData).unwrap();
+            console.log(res);
+            if (res?.code === 200) {
+                message.success(res?.message);
+                setIsAddModalVisible(false);
+                refetch();
+            }
+        } catch (error) {
+            message.error(error?.data?.message, "Something went wrong");
+            // setIsAddModalVisible(false);
+        }
     };
 
-    // Handle Edit Sub Admin form submission
-    const handleEditSubAdmin = (values) => {
-        const updatedUser = { ...selectedUser, ...values }; // Merge updated values
-
-        // Simulate editing sub admin
-        message.success("Sub Admin updated successfully!");
-        setIsEditModalVisible(false);
-        setSelectedUser(updatedUser); // Update the displayed user data
-    };
 
     // Handle Delete Sub Admin
     const handleDelete = (item) => {
+
+        console.log(item)
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -95,6 +115,7 @@ const Lawyera = () => {
             if (result.isConfirmed) {
                 // Simulate delete
                 message.success("Sub Admin deleted successfully!");
+                  console.log(item)
             }
         });
     };
@@ -118,14 +139,14 @@ const Lawyera = () => {
             key: "email",
         },
         {
-            title: "Phone Number",
-            dataIndex: "phone",
-            key: "phone",
+            title: "Role",
+            dataIndex: "role",
+            key: "role",
         },
         {
             title: "Joining Date",
-            dataIndex: "joiningDate",
-            key: "joiningDate",
+            dataIndex: "createdAt",
+            key: "createdAt",
             render: (date) => moment(date).format("DD MMM YYYY"),
         },
         {
@@ -147,7 +168,7 @@ const Lawyera = () => {
     ];
 
     // Paginate Data
-    const paginatedData = demoSubAdmins.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedData = fullData?.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     return (
         <div className="py-10 text-base">
@@ -187,7 +208,7 @@ const Lawyera = () => {
                 <Pagination
                     current={currentPage}
                     pageSize={pageSize}
-                    total={demoSubAdmins.length || 0}
+                    total={pageItems || 0}
                     onChange={setCurrentPage}
                     showSizeChanger={false}
                 />
@@ -199,30 +220,33 @@ const Lawyera = () => {
                     <div className="text-gray-700">
                         <p className="my-5 flex items-center justify-between"><strong>Full Name:</strong> {selectedUser.name}</p>
                         <p className="my-5 flex items-center justify-between"><strong>Email:</strong> {selectedUser.email}</p>
-                        <p className="my-5 flex items-center justify-between"><strong>Phone Number:</strong> {selectedUser.phone}</p>
+                        <p className="my-5 flex items-center justify-between"><strong>Role:</strong> {selectedUser.role}</p>
                         <p className="my-5 flex items-center justify-between"><strong>Joining Date:</strong> {moment(selectedUser.createdAt).format("DD MMM YYYY")}</p>
-                        <p className="my-5 flex items-center justify-between"><strong>Status:</strong> {selectedUser.status}</p>
                     </div>
                 )}
             </Modal>
 
+            {/* 
+    need modal with this items for create sub admin
+{
+    "email":"djxyz99@gmail.com",
+    "password": "asdfadsf",
+    "name": "Sub Admin Test By Nerob V0",
+    "role" : "subAdmin",
+    "message" : "Welcome Welcome Welcome Welcome"
+} */}
+
             {/* Add Sub Admin Modal */}
             <Modal open={isAddModalVisible} onCancel={handleCloseAddModal} footer={null} title="Add New Sub Admin">
                 <Form form={form} layout="vertical" onFinish={handleAddSubAdmin}>
-                    <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: "Please enter full name" }]}>
+                    <Form.Item label="Full Name" name="name" rules={[{ required: true, message: "Please enter full name" }]}>
                         <Input placeholder="Enter full name" />
                     </Form.Item>
                     <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter email" }]}>
                         <Input placeholder="Enter email" />
                     </Form.Item>
-                    <Form.Item label="Phone Number" name="phone" rules={[{ required: true, message: "Please enter phone number" }]}>
-                        <Input placeholder="Enter phone number" />
-                    </Form.Item>
-                    <Form.Item label="Status" name="status" rules={[{ required: true, message: "Please select status" }]}>
-                        <Select defaultValue="Active" onChange={(value) => setStatus(value)}>
-                            <Select.Option value="Active">Active</Select.Option>
-                            <Select.Option value="Inactive">Inactive</Select.Option>
-                        </Select>
+                    <Form.Item label="Password" name="password" rules={[{ required: true, message: "Please enter phone number" }]}>
+                        <Input placeholder="Enter password" />
                     </Form.Item>
                     <div className="flex justify-end mt-4">
                         <Button onClick={handleCloseAddModal} className="mr-3">Cancel</Button>
@@ -231,30 +255,6 @@ const Lawyera = () => {
                 </Form>
             </Modal>
 
-            {/* Edit Sub Admin Modal */}
-            <Modal open={isEditModalVisible} onCancel={handleCloseEditModal} footer={null} title="Edit Sub Admin">
-                <Form form={form} layout="vertical" onFinish={handleEditSubAdmin}>
-                    <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: "Please enter full name" }]}>
-                        <Input placeholder="Enter full name" />
-                    </Form.Item>
-                    <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter email" }]}>
-                        <Input placeholder="Enter email" />
-                    </Form.Item>
-                    <Form.Item label="Phone Number" name="phone" rules={[{ required: true, message: "Please enter phone number" }]}>
-                        <Input placeholder="Enter phone number" />
-                    </Form.Item>
-                    <Form.Item label="Status" name="status" rules={[{ required: true, message: "Please select status" }]}>
-                        <Select defaultValue={selectedUser?.status} onChange={(value) => setStatus(value)}>
-                            <Select.Option value="Active">Active</Select.Option>
-                            <Select.Option value="Inactive">Inactive</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <div className="flex justify-end mt-4">
-                        <Button onClick={handleCloseEditModal} className="mr-3">Cancel</Button>
-                        <Button type="primary" htmlType="submit">Save Changes</Button>
-                    </div>
-                </Form>
-            </Modal>
         </div>
     );
 };
