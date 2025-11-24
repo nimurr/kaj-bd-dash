@@ -46,7 +46,7 @@ const PersonalinfoEdit = () => {
     // ✅ **Handle Form Submission**
 
 
-    const [updateProfile] = useUpdateProfileMutation();
+    const [updateProfile, { isLoading: updateProfileLoading }] = useUpdateProfileMutation();
     useEffect(() => {
         refetch();
     }, [refetch]);
@@ -135,9 +135,9 @@ const PersonalinfoEdit = () => {
 
                     {/* ✅ Save Changes Button */}
                     <div className="flex sm:justify-end justify-center items-center mt-8">
-                        <Button htmlType="submit" className="h-14 md:px-20 !bg-[#778beb] !text-white rounded-lg text-lg font-medium">
-                            Save  {isLoading ? 'ing...' : "Changes"}
-                        </Button>
+                        <button htmlType="submit" className="h-14 px-8 md:px-20 !bg-[#778beb] !text-white rounded-lg text-lg font-medium">
+                            Save{updateProfileLoading ? 'ing..' : " Changes"}
+                        </button>
                     </div>
                 </Form>
             </div>
