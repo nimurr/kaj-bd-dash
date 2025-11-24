@@ -27,7 +27,7 @@ const SignIn = () => {
 
       
       if (res.error) {
-        toast.error(res.error.data.message);
+        toast.error(res.error.data.message || "Something went wrong");
         console.log(res.error.data.message);
       }
       if (res) {
@@ -44,7 +44,7 @@ const SignIn = () => {
 
 
     } catch (error) {
-      toast.error(error?.data?.message, "Something went wrong");
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
 
