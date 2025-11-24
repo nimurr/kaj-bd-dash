@@ -56,7 +56,7 @@ const PersonalinfoEdit = () => {
         formData.append("phoneNumber", phoneNumber);
 
         if (fileList[0]?.originFileObj) {
-            formData.append("imageOfProfile", fileList[0].originFileObj);
+            formData.append("profileImage", fileList[0].originFileObj);
         }
 
         try {

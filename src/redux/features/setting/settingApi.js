@@ -65,8 +65,8 @@ const settingApi = baseApi.injectEndpoints({
 
     updateProfile: builder.mutation({
       query: (data) => ({
-        url: "/update-profile",
-        method: "POST",
+        url: "/users/profile-info/for-admin",
+        method: "PUT",
         body: data,
       }),
       invalidatesTags: ["Profile"],

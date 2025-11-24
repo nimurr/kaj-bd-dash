@@ -56,6 +56,7 @@ import WorkTrakercancelled from "../page/WorkTraker/WorkTrakercancelled";
 import WorkTrakerInProgress from "../page/WorkTraker/WorkTrakerInProgress";
 import ContactUs from "../page/ContactUs/ContactUs";
 import TransactionHistory from "../page/TransactionHistory/TransactionHistory";
+import CustomerSupport from "../component/Main/CustomerSupport/CustomerSupport";
 
 
 
@@ -186,6 +187,10 @@ const router = createBrowserRouter([
       {
         path: "/others-settings",
         element: <AllDocument />,
+      },
+      {
+        path: "/customer-support",
+        element: <CustomerSupport />,
       },
 
 

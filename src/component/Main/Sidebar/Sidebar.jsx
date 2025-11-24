@@ -19,6 +19,7 @@ import { CgLoadbarDoc } from "react-icons/cg";
 import { VscSettings } from "react-icons/vsc";
 import { SlWallet } from "react-icons/sl";
 import { TbCalendarDollar } from "react-icons/tb";
+import { BiSupport } from "react-icons/bi";
 
 const sidebarItems = [
   {
@@ -77,6 +78,11 @@ const sidebarItems = [
     name: "Others",
     icon: <VscSettings className="size-6" />,
   },
+  {
+    path: "/customer-support",
+    name: "Customer Support",
+    icon: <BiSupport className="size-6" />,
+  },
 ];
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
@@ -98,7 +104,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2 mb-5 text-black">
           <img src={logo} alt="logo" className="w-[100px] rounded shadow  " />
         </Link>
-        <ul className="flex flex-col gap-5">
+        <ul className="flex flex-col gap-3">
           {sidebarItems.map((item) => (
             <NavLink
               key={item.name}

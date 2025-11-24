@@ -14,10 +14,10 @@ import Url from "../../../redux/baseApi/forImageUrl";
 const Header = ({ toggleSidebar }) => {
   const navigate = useNavigate();
 
-  const { data: userProfile, refetch } = useGetUserProfileQuery();
 
-  const user = userProfile?.data;
-  // console.log(user);
+  const { data: userProfile, refetch } = useGetUserProfileQuery();
+  const user = userProfile?.data?.attributes;
+  console.log(user);
 
   useEffect(() => {
     refetch();
@@ -36,7 +36,7 @@ const Header = ({ toggleSidebar }) => {
         </button>
       </div>
 
-      <div className="flex justify-between items-center gap-5">
+      <div className="flex justify-between items-center gap-3 mr-3">
         <Link to={"/notification"}>
           <h1 className="relative text-[#778beb] p-2 rounded-full bg-white">
             <MdNotificationsNone className="size-8" />{" "}
@@ -46,15 +46,12 @@ const Header = ({ toggleSidebar }) => {
         </Link>
         <Link to={'/settings/personal-info'}>
           <img
-            className="w-12 rounded-full"
-            src={user?.profileImageUrl ? Url + user?.profileImageUrl : userImage}
+            className="w-12 h-12 border  rounded-full"
+            src={user?.profileImage?.imageUrl.includes('amazonaws') ? user?.profileImage?.imageUrl : Url + user?.profileImage?.imageUrl
+            }
             alt="User Profile"
           />
         </Link>
-        <div className="hidden md:block">
-          <h1 className="">{user?.fullName}</h1>
-          <span className="">{user?.role}</span>
-        </div>
       </div>
     </div>
   );
