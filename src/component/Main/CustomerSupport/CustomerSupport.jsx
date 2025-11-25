@@ -6,38 +6,11 @@ import { FaAngleLeft, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoEyeOutline } from "react-icons/io5";
 import { useGetAlluserSupportQuery } from "../../../redux/features/userSupport/userSupport";
+import Url from "../../../redux/baseApi/forImageUrl";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 
 const { Item } = Form;
 
-const demoUserData = [
-    {
-        id: "1",
-        name: "John Doe",
-        email: "johndoe@example.com",
-        phoneNumber: "1234567890",
-        gender: "Male",
-        createdAt: "2023-05-15T10:20:30Z",
-        role: "Customer",
-        profileImage: {
-            imageUrl: "https://www.w3schools.com/w3images/avatar2.png",
-        },
-        message: "I need help with my account Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    {
-        id: "2",
-        name: "Jane Smith",
-        email: "janesmith@example.com",
-        phoneNumber: "0987654321",
-        gender: "Female",
-        createdAt: "2023-06-10T15:45:00Z",
-        role: "Support Agent",
-        profileImage: {
-            imageUrl: "https://www.w3schools.com/w3images/avatar6.png",
-        },
-        message: "I need help with my account Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    },
-    // Add more users as necessary for demo
-];
 
 const CustomerSupport = () => {
     const [fromDate, setFromDate] = useState("2024-01-01");
@@ -48,30 +21,30 @@ const CustomerSupport = () => {
     const [limit, setLimit] = useState(10);
 
     const { data, isLoading } = useGetAlluserSupportQuery({ page, limit });
-    console.log(data)
-
-    const fullUserData = demoUserData; // Using static demo data
+    const fullData = data?.data?.attributes?.results;
+    const paginatePage = data?.data?.attributes?.totalPages;
+    console.log(fullData, paginatePage)
 
 
     const [searchText, setSearchText] = useState("");
     const [selectedDate, setSelectedDate] = useState([null, null]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [dataSource, setDataSource] = useState(fullUserData);
+    const [dataSource, setDataSource] = useState(fullData);
 
     // User details visibility state
     const [detailsVisible, setDetailsVisible] = useState(false);
     const [userDataFull, setUserDataFull] = useState(null);
 
     useEffect(() => {
-        if (!fullUserData) return;
+        if (!fullData) return;
 
-        let filteredData = fullUserData;
+        let filteredData = fullData;
 
         // Apply search filter
         if (searchText.trim() !== "") {
-            filteredData = filteredData.filter(
+            filteredData = filteredData?.filter(
                 (user) =>
-                    user.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+                    user?.creatorId.name?.toLowerCase().includes(searchText.toLowerCase()) ||
                     user.email?.toLowerCase().includes(searchText.toLowerCase()) ||
                     String(user.phoneNumber).includes(searchText)
             );
@@ -88,7 +61,7 @@ const CustomerSupport = () => {
         }
 
         setDataSource(filteredData);
-    }, [searchText, selectedDate, fullUserData]);
+    }, [searchText, selectedDate, fullData]);
 
     const handleShowDetails = (user) => {
         setUserDataFull(user);
@@ -97,10 +70,14 @@ const CustomerSupport = () => {
 
     const columns = [
         { title: "#SI", dataIndex: "si", key: "si", render: (text, record, index) => index + 1 },
-        { title: "Full Name", dataIndex: "name", key: "name" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
-        { title: "Gender", dataIndex: "gender", key: "gender" },
+        { title: "Full Name", dataIndex: "name", key: "name", render: (text, record) => record.creatorId.name },
+        { title: "Email", dataIndex: "email", key: "email", render: (text, record) => record.creatorId.email },
+        { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber", render: (text, record) => record.creatorId.phoneNumber },
+        { title: "Role", dataIndex: "role", key: "role", render: (text, record) => record.creatorId.role },
+        {
+            title: "Read Status", dataIndex: "role", key: "role",
+            render: (text, record) => record.isResolved ? <span className="text-green-600">Completed</span> : <span className="text-yellow-600">Progressing </span>
+        },
         {
             title: "Joined Date",
             dataIndex: "createdAt",
@@ -161,34 +138,37 @@ const CustomerSupport = () => {
                             <FaArrowLeft className="text-xl text-yellow-50" />
                         </div>
                         {/* Provider Profile Section */}
-                        <div className="flex items-center justify-between gap-5 mb-5">
+                        <div className="flex items-center justify-between flex-wrap gap-5 mb-5">
                             <div className="flex items-center gap-5">
                                 <img
                                     className="w-24 h-24 rounded-full"
-                                    src={userDataFull?.profileImage?.imageUrl}
+                                    src={userDataFull?.creatorId?.profileImage?.imageUrl.includes("amazonaws") ? userDataFull?.creatorId?.profileImage?.imageUrl : Url + userDataFull?.creatorId?.profileImage?.imageUrl}
                                     alt="Provider"
                                 />
-                                <h1 className="text-2xl font-semibold">{userDataFull?.name}</h1>
+                                <h1 className="text-2xl font-semibold">{userDataFull?.creatorId?.name}</h1>
+                            </div>
+                            <div>
+                                <button className="py-2 px-8 bg-[#778beb] text-white rounded hover:bg-[#778beb]">Complete</button>
                             </div>
                         </div>
                         {/* Provider Details Section */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded border-[#f1f1f1]">
                                 <span className="font-semibold">Name</span>
-                                <span>{userDataFull?.name}</span>
+                                <span>{userDataFull?.creatorId?.name}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded border-[#f1f1f1]">
                                 <span className="font-semibold">Email</span>
-                                <span>{userDataFull?.email}</span>
+                                <span>{userDataFull?.creatorId?.email}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded border-[#f1f1f1]">
                                 <span className="font-semibold">Phone</span>
-                                <span>{userDataFull?.phoneNumber}</span>
+                                <span>{userDataFull?.creatorId?.phoneNumber}</span>
                             </div>
 
                             <div className="py-3 border-2 p-2 rounded-lg border-[#f1f1f1]">
-                                <p className="mb-3 text-gray-500">{userDataFull?.message}</p>
-                                <img className="border  rounded-lg" src="https://raw.githubusercontent.com/arifpro/sslcommerz-mern-example/main/screenshots/PaymentPage2.png" alt="" />
+                                <p className="mb-3 text-gray-500"><span className="font-semibold text-black">Message:</span> {userDataFull?.supportMessage}</p>
+                                <img className="border  rounded-lg" src={userDataFull?.attachments[0]?.attachment.includes("amazonaws") ? userDataFull?.attachments[0]?.attachment : Url + userDataFull?.attachments[0]?.attachment} alt="" />
                             </div>
 
                         </div>
