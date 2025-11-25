@@ -50,10 +50,10 @@ const SignIn = () => {
 
   return (
     <div className="w-full  h-full md:h-screen md:flex justify-around overflow-visible">
-      <div className="md:w-[600px] mx-auto border-shadow rounded-md h-[70%] md:my-28 place-content-center px-5 py-5 gap-8 bg-white md:mx-10">
-        <div className=" px-8">
+      <div className="md:w-[600px] mx-5 border-shadow rounded-md h-[70%] my-10 md:my-28 place-content-center md:px-5 px-2 md:py-5 py-5 gap-8 bg-white md:mx-10">
+        <div className="md:px-8 px-3">
           <div className="mb-8">
-            <img src={logoimage} className="w-[100px] rounded-full shadow-xl h-[100px] mx-auto mb-5" alt="" />
+            <img src={logoimage} className="w-[100px] rounded-full border-shadow h-[100px] mx-auto mb-10" alt="" />
             <h1 className="font-semibold text-3xl text-gray-800">
               Hello, Welcome!
             </h1>
