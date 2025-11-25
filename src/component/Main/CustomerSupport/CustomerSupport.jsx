@@ -5,6 +5,7 @@ import { IoIosSearch } from "react-icons/io";
 import { FaAngleLeft, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoEyeOutline } from "react-icons/io5";
+import { useGetAlluserSupportQuery } from "../../../redux/features/userSupport/userSupport";
 
 const { Item } = Form;
 
@@ -43,7 +44,14 @@ const CustomerSupport = () => {
     const [toDate, setToDate] = useState("3222-12-31");
     const [searchData, setSearchData] = useState("");
 
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+
+    const { data, isLoading } = useGetAlluserSupportQuery({ page, limit });
+    console.log(data)
+
     const fullUserData = demoUserData; // Using static demo data
+
 
     const [searchText, setSearchText] = useState("");
     const [selectedDate, setSelectedDate] = useState([null, null]);
