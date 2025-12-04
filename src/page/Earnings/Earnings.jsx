@@ -54,7 +54,7 @@ const Earnings = () => {
             <div className='border border-green-500  text-green-500 p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>Total Earnings </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400'>{fullData?.totalEarnings?.count}</span>
@@ -66,7 +66,7 @@ const Earnings = () => {
             <div className='border border-red-500  text-red-500  p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.todayEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400'>{fullData?.todayEarnings?.count}</span>
@@ -78,7 +78,7 @@ const Earnings = () => {
             <div className='border border-blue-500  text-blue-500  p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.thisWeekEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400'>{fullData?.thisWeekEarnings?.dateRange}</span>
@@ -90,7 +90,7 @@ const Earnings = () => {
             <div className='border border-yellow-500  text-yellow-500  p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.thisMonthEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400 capitalize'>{fullData?.thisMonthEarnings?.month}</span>
@@ -102,7 +102,7 @@ const Earnings = () => {
             <div className='border border-purple-500  text-purple-500  p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.lastWeekEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400'>{fullData?.lastWeekEarnings?.dateRange}</span>
@@ -114,7 +114,7 @@ const Earnings = () => {
             <div className='border border-orange-500  text-orange-500 p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.lastMonthEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400 capitalize'>{fullData?.lastMonthEarnings?.month}</span>
@@ -126,7 +126,7 @@ const Earnings = () => {
             <div className='border border-pink-500  text-pink-500 p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.thisQuarterEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400 capitalize'>{fullData?.thisQuarterEarnings?.count}</span>
@@ -138,7 +138,7 @@ const Earnings = () => {
             <div className='border border-indigo-500  text-indigo-500  p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>{fullData?.thisYearEarnings?.label} </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400 capitalize'>{fullData?.thisYearEarnings?.count}</span>
@@ -150,7 +150,7 @@ const Earnings = () => {
             <div className='border border-red-600  text-red-500 p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>Current Balance </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-between my-5 items-center '>
                 <span className='text-xl font-semibold text-gray-400 capitalize'> Token Balance :{fullData?.currentBalance?.tokenBalance}</span>
@@ -162,7 +162,7 @@ const Earnings = () => {
             <div className='border border-lime-600  text-lime-500 p-3 rounded-xl'>
               <div className='flex items-center justify-between'>
                 <h2 className='text-2xl text-gray-600 font-semibold'>Total Transactions </h2>
-                <h2 className='text-3xl text-gray-600 font-semibold '> Earn </h2>
+                <h2 className='text-3xl text-gray-600 font-semibold '>  </h2>
               </div>
               <div className='flex justify-end my-5 items-center '>
                 <h1 className='text-right text-5xl '>৳{fullData?.totalTransactions}</h1>
