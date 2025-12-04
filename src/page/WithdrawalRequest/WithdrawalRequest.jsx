@@ -18,7 +18,7 @@ const WithdrawalRequest = () => {
     const [selectedDate, setSelectedDate] = useState([null, null]); // Store fromDate and toDate
     const [fromDate, setFromDate] = useState('2024-01-01');
     const [toDate, setToDate] = useState('3222-12-31');
-    const [status, setStatus] = useState('rejected');
+    const [status, setStatus] = useState('requested');
     const { data: withdrawalData, refetch } = useGetWithdrawalQuery({ from: fromDate, to: toDate, status });
     const fullwithdrawalData = withdrawalData?.data?.attributes?.results;
     console.log(fullwithdrawalData)
@@ -86,6 +86,7 @@ const WithdrawalRequest = () => {
             title: 'Withdraw Amount',
             dataIndex: 'requestedAmount',
             key: 'requestedAmount',
+            render: (s) => <span>৳{s}</span>
         },
         {
             title: 'Request Date',
@@ -205,9 +206,9 @@ const WithdrawalRequest = () => {
                             </Item>
                             <div>
                                 <select className='py-1 px-5 rounded border border-[#778beb]' onChange={(e) => setStatus(e.target.value)} name="status" id="">
+                                    <option value="requested">Requested</option>
                                     <option value="rejected">Rejected</option>
                                     <option value="completed">Completed</option>
-                                    <option value="requested">Requested</option>
                                 </select>
                             </div>
                         </Form>
@@ -272,6 +273,10 @@ const WithdrawalRequest = () => {
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold">Email</span>
                                 <span>{modalData?.userId?.email || "N/A"}</span>
+                            </div>
+                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
+                                <span className="font-semibold">Bank Account Holder Name</span>
+                                <span>{modalData?.bankAccountHolderName || "N/A"}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
                                 <span className="font-semibold">Bank Name</span>

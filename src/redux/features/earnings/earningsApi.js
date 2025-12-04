@@ -10,8 +10,8 @@ const earningsApi = baseApi.injectEndpoints({
       transformResponse: (response) => response?.data, // ✅ Returns only needed data
     }),
     getPaymentTransactionsHistory: builder.query({
-      query: () => ({
-        url: `/payment-transactions/paginate`, // ✅ Fixed API URL
+      query: ({ status, searchText }) => ({
+        url: `/payment-transactions/paginate?${status && `paymentStatus=${status}&`}${searchText && `transactionId=${searchText}`}`, // ✅ Fixed API URL
         method: "GET",
       }),
       transformResponse: (response) => response?.data, // ✅ Returns only needed data

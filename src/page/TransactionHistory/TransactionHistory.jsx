@@ -10,12 +10,16 @@ const TransactionHistory = () => {
     const [modalData, setModalData] = useState(null);
     const [searchText, setSearchText] = useState("");
     const [selectedDate, setSelectedDate] = useState([null, null]);
-    const [status, setStatus] = useState('rejected');
+    const [status, setStatus] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);  // Current page state
 
     // API call to fetch transaction history
-    const { data: withdrawalData, refetch, isLoading } = useGetPaymentTransactionsHistoryQuery();
+    const { data: withdrawalData, refetch, isLoading } = useGetPaymentTransactionsHistoryQuery({ status, searchText });
     const fullwithdrawalData = withdrawalData?.attributes?.results || [];
+    const totalResults = withdrawalData?.attributes?.totalResults || 0;  // Total number of transactions
+    const pageSize = 10; // Number of items per page
 
+    console.log(fullwithdrawalData)
 
     // Modal visibility handler
     const handleShowDetails = (record) => {
@@ -27,6 +31,7 @@ const TransactionHistory = () => {
         setIsModalVisible(false);
         setModalData(null);
     };
+
     // Filter data based on searchText and date range
     const filteredData = fullwithdrawalData?.filter((request) => {
         let isValid = true;
@@ -50,6 +55,11 @@ const TransactionHistory = () => {
 
         return isValid;
     });
+
+    // Handle page change
+    const handlePageChange = (page) => {
+        setCurrentPage(page);  // Update current page when the page is changed
+    };
 
     // Columns for the table
     const columns = [
@@ -106,13 +116,13 @@ const TransactionHistory = () => {
 
     return (
         <div className="p-5">
-            <div className="flex items-center justify-between gap-5">
+            <div className="flex items-center justify-between flex-wrap my-3 gap-5">
                 <h1 className="text-2xl font-semibold mb-4">Transactions History</h1>
                 {/* Filter by Period */}
-                <Form className="flex items-center gap-5">
+                <Form className="flex items-center flex-wrap md:flex-nowrap gap-5">
                     <Input
                         className="py-1 inline px-2 min-w-[250px] rounded border border-[#778beb]"
-                        placeholder="Search by Provider, Bank, Amount...."
+                        placeholder="Search by Transaction Id"
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                     />
@@ -121,6 +131,7 @@ const TransactionHistory = () => {
                         onChange={(e) => setStatus(e.target.value)}
                         value={status}
                     >
+                        <option value="">All</option>
                         <option value="pending">Pending</option>
                         <option value="processing">Processing</option>
                         <option value="completed">Completed</option>
@@ -156,12 +167,11 @@ const TransactionHistory = () => {
             <div>
                 <Pagination
                     className="my-5 flex justify-end"
-                    total={filteredData.length}
-                    pageSize={10}
-                    showSizeChanger={false}
-                    onChange={(page) => {
-                        // Handle page change if needed
-                    }}
+                    current={currentPage}  // Track the current page
+                    total={totalResults}  // Total number of transactions
+                    pageSize={pageSize}  // Number of items per page
+                    showSizeChanger={false} // Disable changing page size
+                    onChange={handlePageChange}  // Update page when user changes page
                 />
             </div>
 
@@ -189,7 +199,6 @@ const TransactionHistory = () => {
                             <span>{modalData?.userId?.email || "N/A"}</span>
                         </div>
 
-
                         {/* Transaction Details */}
                         <div className="flex items-center justify-between">
                             <span className="font-semibold">Amount:</span>
@@ -215,8 +224,6 @@ const TransactionHistory = () => {
                             <span className="font-semibold">Payment Intent:</span>
                             <span>{modalData?.paymentIntent}</span>
                         </div>
-
-
                     </div>
                 )}
             </Modal>
