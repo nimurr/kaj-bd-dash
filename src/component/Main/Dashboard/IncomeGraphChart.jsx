@@ -5,7 +5,7 @@ const IncomeGraphChart = ({ fullData, isLoading }) => {
   // Format the data to limit the floating-point values to 2 decimal places
   const formattedData = fullData?.totalRevenueByMonth?.monthlyData.map(item => ({
     ...item,
-    amount: parseFloat(item.amount.toFixed(2)) // Round 'amount' to 2 decimal places
+    amount: parseFloat(item?.amount?.toFixed(2)) // Round 'amount' to 2 decimal places
   }));
 
   return (
