@@ -7,7 +7,7 @@ import CustomInput from "../../../utils/CustomInput";
 import CustomButton from "../../../utils/CustomButton";
 import { toast } from "sonner";
 import { useResetPasswordMutation } from "../../../redux/features/auth/authApi";
-import logoimage from '/public/logo/Logo-Orange.png';
+import logoimage from '/public/logo/main_logo.png';
 
 
 const NewPassword = () => {

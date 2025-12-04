@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import { IoBagHandleSharp, IoSettingsSharp } from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "/public/logo/dashboard_log.png";
+import logo from "/public/logo/main_logo.png";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../redux/features/auth/authSlice";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";

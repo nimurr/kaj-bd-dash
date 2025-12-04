@@ -1,6 +1,6 @@
 import signinImage from "/public/Auth/login.png";
 import authLogo from "../../../assets/auth/auth-logo.png";
-import logoimage from '/public/logo/Logo-Orange.png';
+import logoimage from '/public/logo/main_logo.png';
 
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Checkbox } from "antd";

@@ -10,7 +10,7 @@ import {
   useVerifyEmailMutation,
 } from "../../../redux/features/auth/authApi";
 import { toast } from "sonner";
-import logoimage from '/public/logo/Logo-Orange.png';
+import logoimage from '/public/logo/main_logo.png';
 
 
 const Otp = () => {

@@ -3,96 +3,22 @@ import { useState, useEffect } from "react";
 import { FaAngleLeft } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useGetAllNotificationQuery } from "../../../redux/features/setting/settingApi";
+import { useGetNotificationsQuery } from "../../../redux/features/notifications/notifications";
 import moment from "moment";
-
-import { io } from 'socket.io-client';
-import socketUrl from "../../../config/socketUrl";
-
-let AUTH_TOKEN = '';
-if (typeof window !== 'undefined') {
-  const token = localStorage.getItem('token');
-  if (token) {
-    AUTH_TOKEN = token;
-  }
-}
-
-let socketInstance = null;
-
-const socketUrls = socketUrl; // Define your socket URL here
 
 const Notification = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(10); // Number of items per page is fixed at 2
 
-  // Sample demo notifications data
-  const allNotification = {
-    notifications: [
-      { id: 1, message: "New message from John", createdAt: "2025-09-09T10:00:00Z" },
-      { id: 2, message: "Your subscription is about to expire", createdAt: "2025-09-08T14:30:00Z" },
-      { id: 3, message: "System update completed successfully", createdAt: "2025-09-07T08:15:00Z" },
-      { id: 4, message: "You have a new comment on your post", createdAt: "2025-09-06T16:45:00Z" },
-      { id: 5, message: "Reminder: Meeting at 3 PM", createdAt: "2025-09-05T11:00:00Z" },
-      { id: 6, message: "Your profile was updated", createdAt: "2025-09-04T19:30:00Z" },
-      { id: 7, message: "Password changed successfully", createdAt: "2025-09-03T09:10:00Z" },
-      { id: 8, message: "New follower alert", createdAt: "2025-09-02T13:20:00Z" },
-      { id: 9, message: "Event reminder: Team meeting at 10 AM", createdAt: "2025-09-01T07:45:00Z" },
-      { id: 10, message: "You have a new like on your post", createdAt: "2025-08-31T16:25:00Z" },
-      { id: 11, message: "New software update available", createdAt: "2025-08-30T12:55:00Z" },
-      { id: 12, message: "Account settings updated", createdAt: "2025-08-29T15:40:00Z" },
-      { id: 13, message: "Reminder: Deadline for task submission", createdAt: "2025-08-28T14:10:00Z" },
-      { id: 14, message: "New friend request from Alice", createdAt: "2025-08-27T10:30:00Z" },
-      { id: 15, message: "Your subscription has been renewed", createdAt: "2025-08-26T13:25:00Z" },
-    ]
-  };
+  // Fetch notifications based on the current page and limit
+  const { data, isLoading } = useGetNotificationsQuery({ page: currentPage, limit });
+  const allNotification = data?.data?.attributes?.results || [];
+  const totalResults = data?.data?.attributes?.totalResults || 0; // Total number of items (notifications)
+  const totalPages = data?.data?.attributes?.totalPages || 1; // Total number of pages
 
-  const pageSize = 10;
-
-  // Pagination Logic
-  const paginatedNotifications = allNotification?.notifications.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
+  // Handle pagination page change
   const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  // Socket connection handling
-  useEffect(() => {
-    // Initialize socket connection when the component is mounted
-    const socket = initializeSocket();
-
-    // Log socket connection status
-    socket.on('connect', () => {
-      console.log("✅ Socket Connected Successfully");
-    });
-
-    socket.on('connect_error', (error) => {
-      console.error("❌ Socket Connection Failed: ", error);
-    });
-
-    // Clean up the socket connection when the component is unmounted
-    return () => {
-      if (socketInstance) {
-        socketInstance.disconnect();
-        socketInstance = null;
-        console.log("❌ Socket Disconnected");
-      }
-    };
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
-
-  const initializeSocket = () => {
-    if (!socketInstance) {
-      socketInstance = io(socketUrls, {
-        auth: { token: AUTH_TOKEN },
-        extraHeaders: { token: AUTH_TOKEN },
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        timeout: 10000,
-      });
-    }
-    return socketInstance;
+    setCurrentPage(page); // Update the current page when user changes page
   };
 
   return (
@@ -100,14 +26,28 @@ const Notification = () => {
       <Link to={"/"} className="text-2xl flex items-center mb-4"><FaAngleLeft /> Notification</Link>
 
       <div className="space-y-2">
-        {paginatedNotifications?.map((item) => (
-          <div key={item.id} className="border border-[#778beb] hover:bg-[#778beb56] cursor-pointer rounded-md p-2 flex items-center space-x-4">
-            <div className="text-[#778beb] border border-[#778beb] rounded-full p-2">
-              <span className=" bg-[#778beb] p-1.5 rounded-full absolute ml-4 z-20"></span>
+        {
+          isLoading && [...Array(10)].map((_, i) => (
+            <div class="mx-auto w-full rounded-md border border-blue-300 p-2">
+              <div class="flex animate-pulse space-x-4">
+                <div class="size-10 rounded-full bg-gray-200"></div>
+                <div class="flex-1 space-y-6 py-1">
+                  <div class="h-2 rounded bg-gray-200"></div>
+                  <div class="space-y-3">
+                    <div class="h-2 rounded bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
+            </div>))
+        }
+        {allNotification?.map((item) => (
+          <div key={item.id} className="border border-[#a5b2f5] hover:bg-[#778beb56] cursor-pointer rounded-md p-2 flex items-center space-x-4">
+            <div className="text-[#a5b2f5] border border-[#a5b2f5] rounded-full p-2">
+              <span className=" bg-[#a5b2f5] p-1.5 rounded-full absolute ml-4 z-20"></span>
               <IoMdNotificationsOutline size={30} className="relative" />
             </div>
             <div>
-              <p className="font-semibold">{item?.message}</p>
+              <p className=" text-[#666]">{item?.title}</p>
               <p className="text-gray-500">{moment(item?.createdAt).fromNow()}</p>
             </div>
           </div>
@@ -115,12 +55,13 @@ const Notification = () => {
       </div>
 
       {/* Centering the Pagination */}
-      <div className="mt-4 flex justify-center">
+      <div className="mt-4 flex justify-end">
         <Pagination
-          current={currentPage}
-          total={allNotification?.notifications.length}
-          pageSize={pageSize}
-          onChange={onPageChange}
+          current={currentPage} // Set current page
+          pageSize={limit} // Set the number of items per page (2 items per page by default)
+          total={totalResults} // Total number of items (not total pages)
+          onChange={onPageChange} // Update current page when the page is changed
+          showSizeChanger={false} // Disable changing page size if you want it to be fixed
         />
       </div>
     </div>
