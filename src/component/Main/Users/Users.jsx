@@ -109,7 +109,7 @@ const Users = () => {
           <Item name="username">
             <Input
               className="rounded-md w-[70%] md:w-full border border-[#778beb]"
-              placeholder="Search by Name, Email, or Phone"
+              placeholder="Search by Name ..."
               onChange={(e) => setSearchText(e.target.value)}
             />
           </Item>
