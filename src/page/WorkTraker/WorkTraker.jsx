@@ -199,7 +199,7 @@ const WorkTraker = () => {
                 </div>
             </div>
 
-            <div>
+            <div className='w-full overflow-x-auto'>
                 <ConfigProvider
                     theme={{
                         components: {
@@ -212,6 +212,7 @@ const WorkTraker = () => {
                     }}
                 >
                     <Table
+                    className='min-w-[1000px]'
                         columns={columns}
                         dataSource={dataSource}
                         pagination={{

@@ -57,6 +57,7 @@ import WorkTrakerInProgress from "../page/WorkTraker/WorkTrakerInProgress";
 import ContactUs from "../page/ContactUs/ContactUs";
 import TransactionHistory from "../page/TransactionHistory/TransactionHistory";
 import CustomerSupport from "../component/Main/CustomerSupport/CustomerSupport";
+import AdminPrivetRoutes from "../utils/AdminPrivetRoutes";
 
 
 
@@ -64,11 +65,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <AdminRoutes>
-      // </AdminRoutes>
-      // <PrivetRout1e>  
-      <MainLayout />
-      // </PrivetRout1e>
+      <AdminPrivetRoutes >
+        <MainLayout />
+      </AdminPrivetRoutes>
     ),
     errorElement: <h1>Error</h1>,
     children: [
