@@ -68,7 +68,6 @@ const AllDocument = () => {
         }
     }
 
-
     // Handle percentage input change
     const handlePercentageChange = (event) => {
         setPercentage(event.target.value);
