@@ -7,6 +7,7 @@ import { MdOutlineMiscellaneousServices } from "react-icons/md";
 const Status = ({ fullData, isLoading }) => {
 
   console.log(fullData)
+  const user = JSON.parse(localStorage.getItem("user"));
 
 
 
@@ -63,6 +64,7 @@ const Status = ({ fullData, isLoading }) => {
             </div>
 
 
+
             <div className="flex justify-between items-start p-5 rounded-lg border-2 border-gray-200">
               <div className="size-20 p-3 flex justify-center items-center rounded-full bg-[#778beb] text-white  ">
                 <FaUserCircle className="size-10" />
@@ -84,17 +86,22 @@ const Status = ({ fullData, isLoading }) => {
               </div>
             </div>
 
-            <div className="flex justify-between items-start p-5 rounded-lg border-2 border-gray-200">
-              <div className="size-20 p-3 flex justify-center items-center rounded-full bg-[#778beb] text-white   ">
-                <PiCurrencyCircleDollar className="size-10" />
+
+            {
+              user.role === 'admin' &&
+              <div className="flex justify-between items-start p-5 rounded-lg border-2 border-gray-200">
+                <div className="size-20 p-3 flex justify-center items-center rounded-full bg-[#778beb] text-white   ">
+                  <PiCurrencyCircleDollar className="size-10" />
+                </div>
+                <div className="space-y-2">
+                  <h1 className="text-2xl text-right text-gray-700 font-semibold">Total Revenue </h1>
+                  <h1 className="text-center text-5xl font-semibold text-[#222222]">
+                    ৳{fullData?.totalRevenueByMonth?.totalTransactionsAmountForAdmin.toFixed(2) || "0"}
+                  </h1>
+                </div>
               </div>
-              <div className="space-y-2">
-                <h1 className="text-2xl text-right text-gray-700 font-semibold">Total Revenue </h1>
-                <h1 className="text-center text-5xl font-semibold text-[#222222]">
-                  ৳{fullData?.totalRevenueByMonth?.totalTransactionsAmountForAdmin.toFixed(2) || "0"}
-                </h1>
-              </div>
-            </div>
+            }
+
 
             <div className="flex justify-between items-start p-5 rounded-lg border-2 border-gray-200">
               <div className="size-20 p-3 flex justify-center items-center rounded-full bg-[#778beb] text-white  ">

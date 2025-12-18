@@ -15,6 +15,7 @@ const AllDocument = () => {
 
     const [addBanner] = useAddBannerMutation();
     const [deleteBanner] = useDeleteBannerMutation();
+    const user = JSON.parse(localStorage.getItem("user"));
 
 
     // State to store the uploaded image file
@@ -163,25 +164,31 @@ const AllDocument = () => {
 
             </section>
 
+
+
+            {
+                user.role === 'admin' &&
+                <section className='space-y-5 w-full p-5 bg-gray-100 rounded-lg'>
+                    <div>
+                        <h2 className='text-3xl font-medium mb-5'>Add Percentage</h2>
+                        <p>Admin Added Total Percentage is <span className='text-xl font-semibold text-blue-600'>{existingPercentage}%</span></p>
+                    </div>
+                    <div>
+                        <input
+                            type="number"
+                            defaultValue={existingPercentage}  // Bind the input value to state
+                            onChange={handlePercentageChange}  // Update state on change
+                            placeholder='Enter Percentage'
+                            className='w-full px-5 py-2 text-[16px] border border-[#778beb] outline-none focus:border-[#778beb] focus:border-2 text-[#778beb] rounded-lg resize-none'
+                        />
+                        <button onClick={handleSubmitPercentage} className='py-2 w-full bg-[#778beb] text-white mt-5 rounded-[5px]'>
+                            Submit {isLoadingPercentage && '...'}
+                        </button>
+                    </div>
+                </section>
+            }
+
             {/* Section for Percentage */}
-            <section className='space-y-5 w-full p-5 bg-gray-100 rounded-lg'>
-                <div>
-                    <h2 className='text-3xl font-medium mb-5'>Add Percentage</h2>
-                    <p>Admin Added Total Percentage is <span className='text-xl font-semibold text-blue-600'>{existingPercentage}%</span></p>
-                </div>
-                <div>
-                    <input
-                        type="number"
-                        defaultValue={existingPercentage}  // Bind the input value to state
-                        onChange={handlePercentageChange}  // Update state on change
-                        placeholder='Enter Percentage'
-                        className='w-full px-5 py-2 text-[16px] border border-[#778beb] outline-none focus:border-[#778beb] focus:border-2 text-[#778beb] rounded-lg resize-none'
-                    />
-                    <button onClick={handleSubmitPercentage} className='py-2 w-full bg-[#778beb] text-white mt-5 rounded-[5px]'>
-                        Submit {isLoadingPercentage && '...'}
-                    </button>
-                </div>
-            </section>
         </div>
     );
 }

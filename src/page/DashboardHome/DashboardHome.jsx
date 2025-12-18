@@ -28,10 +28,13 @@ const DashboardHome = () => {
       }  </h1>
       <div className="px-3">
         <Status fullData={fullData} isLoading={isLoading} />
-        <div className="grid grid-cols-1 lg:grid-cols-6 items-start gap-5 pt-10">
-          <IncomeGraphChart fullData={fullData} />
-          <Piechart fullData={fullData} />
-        </div>
+        {
+          user.role === 'admin' &&
+          <div className="grid grid-cols-1 lg:grid-cols-6 items-start gap-5 pt-10">
+            <IncomeGraphChart fullData={fullData} />
+            <Piechart fullData={fullData} />
+          </div>
+        }
         <RecentTransactions fullData={fullData} />
       </div>
     </section>

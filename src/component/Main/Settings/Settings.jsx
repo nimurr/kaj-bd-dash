@@ -18,6 +18,9 @@ const Settings = () => {
   const [modelTitle, setModelTitle] = useState("");
   const [otp, setOtp] = useState("");
   const [form] = Form.useForm();
+  const user = JSON.parse(localStorage.getItem("user"));
+
+
   const onChange = (checked) => {
     console.log(`switch to ${checked}`);
   };
@@ -88,7 +91,7 @@ const Settings = () => {
 
     } catch (error) {
       console.log(error?.data?.message);
-      message.error(error?.data?.message ||"Something went wrong");
+      message.error(error?.data?.message || "Something went wrong");
     }
 
 
@@ -109,22 +112,33 @@ const Settings = () => {
   };
   return (
     <section className="w-full py-6">
-      {settingsItem.map((setting, index) => (
-        <div
-          key={index}
-          className="w-full p-4 mb-2 text-sm rounded-lg bg-[#778aeb2d] hover:bg-transparent hover:border-[#778aeb9f] border flex items-center justify-between cursor-pointer "
-          onClick={() => handleNavigate(setting.path)}
-        >
-          <h2 className="text-xl">{setting.title}</h2>
-          <h2>
-            {setting.path === "notification" ? (
-              <Switch defaultChecked onChange={onChange} />
-            ) : (
-              <MdKeyboardArrowRight size={40} />
-            )}
-          </h2>
-        </div>
-      ))}
+      {settingsItem?.map((setting, index) => {
+        // Hide Privacy Policy & Contact Us for non-admins
+        if (
+          (setting.title === "Privacy Policy" ||
+            setting.title === "Contact Us") &&
+          user.role !== "admin"
+        ) {
+          return null;
+        }
+
+        return (
+          <div
+            key={index}
+            className="w-full p-4 mb-2 text-sm rounded-lg bg-[#778aeb2d] hover:bg-transparent hover:border-[#778aeb9f] border flex items-center justify-between cursor-pointer"
+            onClick={() => handleNavigate(setting.path)}
+          >
+            <h2 className="text-xl">{setting.title}</h2>
+            <h2>
+              {setting.path === "notification" ? (
+                <Switch defaultChecked onChange={onChange} />
+              ) : (
+                <MdKeyboardArrowRight size={40} />
+              )}
+            </h2>
+          </div>
+        );
+      })}
       <Modal
         title={
           <div
@@ -330,7 +344,7 @@ const Settings = () => {
           </div>
         )}
       </Modal>
-    </section>
+    </section >
   );
 };
 
