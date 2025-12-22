@@ -49,7 +49,7 @@ const Notification = () => {
               <IoMdNotificationsOutline size={30} className="relative" />
             </div>
             <div>
-              <p className=" text-[#666]">{item?.title}</p>
+              <p className=" text-[#666]">{item?.title?.en || "No title"}</p>
               <p className="text-gray-500">{moment(item?.createdAt).fromNow()}</p>
             </div>
           </div>
