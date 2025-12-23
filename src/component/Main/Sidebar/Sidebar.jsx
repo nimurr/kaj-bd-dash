@@ -287,11 +287,11 @@ const sidebarItems = [
     name: "Others",
     icon: <VscSettings className="size-6" />,
   },
-  {
-    path: "/customer-support",
-    name: "Customer Support",
-    icon: <BiSupport className="size-6" />,
-  },
+  // {
+  //   path: "/customer-support",
+  //   name: "Customer Support",
+  //   icon: <BiSupport className="size-6" />,
+  // },
 ];
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {

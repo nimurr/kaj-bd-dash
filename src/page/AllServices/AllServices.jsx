@@ -98,7 +98,7 @@ const AllServices = () => {
             formData.append("name", serviceName);
         }
         if (isVisible) {
-            formData.append("isVisible", isVisible );
+            formData.append("isVisible", isVisible);
         }
 
         try {
@@ -108,6 +108,9 @@ const AllServices = () => {
                 closeEditModal();
                 refetch();
                 message.success('Service updated successfully!');
+            }
+            if (response?.error) {
+                message.error(response.error.data.message);
             }
         } catch (error) {
             message.error('Failed to update service.');
