@@ -121,9 +121,9 @@ const AllDocument = () => {
                             </p>
                         </Dragger>
                     </div>
-                    <button onClick={() => console.log(storeFileImage)} className='py-2 w-full mt-5 bg-[#778beb] text-white rounded'>
+                    {/* <button onClick={() => console.log(storeFileImage)} className='py-2 w-full mt-5 bg-[#778beb] text-white rounded'>
                         Upload
-                    </button>
+                    </button> */}
                 </div>
                 <div>
                     <div className='grid md:grid-cols-2 gap-3 '>
