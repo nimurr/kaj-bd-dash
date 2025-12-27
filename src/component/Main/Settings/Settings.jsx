@@ -42,10 +42,10 @@ const Settings = () => {
       title: "Privacy Policy",
       path: "privacy-policy",
     },
-    // {
-    //   title: "Terms & Conditions",
-    //   path: "terms-conditions",
-    // },
+    {
+      title: "Terms & Conditions",
+      path: "terms-conditions",
+    },
     // {
     //   title: "About us",
     //   path: "about-us",

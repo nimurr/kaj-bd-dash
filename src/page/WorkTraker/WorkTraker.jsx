@@ -130,7 +130,7 @@ const WorkTraker = () => {
                 </Form>
             </div>
 
-            <div clsassName="w-full overflow-x-auto">
+            <div className="w-full overflow-x-auto">
                 <ConfigProvider
                     theme={{
                         components: {
@@ -141,16 +141,17 @@ const WorkTraker = () => {
                         },
                     }}
                 >
-                    <Table 
+                    <Table
                         columns={columns}
                         dataSource={dataSource}
                         rowKey="_ServiceBookingId"
                         loading={isLoading}
+                        scroll={{ x: 'max-content' }}
                         pagination={{
                             current: page,
                             pageSize: limit,
                             total,
-                            showSizeChanger: true, 
+                            showSizeChanger: true,
                             onChange: handlePageChange,
                         }}
                         onRow={(record) => ({
@@ -160,6 +161,7 @@ const WorkTraker = () => {
                     />
                 </ConfigProvider>
             </div>
+
         </div>
     );
 };

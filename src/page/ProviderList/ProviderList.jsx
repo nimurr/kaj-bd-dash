@@ -36,6 +36,7 @@ const ProviderList = () => {
   // ================= DATA =================
   const providers = data?.data?.attributes?.results || [];
   const pagination = data?.data?.attributes;
+  console.log(providers)
 
   // ================= HANDLER =================
   const handleShowDetails = (user) => {
@@ -134,36 +135,37 @@ const ProviderList = () => {
 
       {/* CONTENT */}
       <div
-        className={`${
-          detailsVisible ? "grid lg:grid-cols-2 gap-5" : "block"
-        } duration-500`}
+        className={`${detailsVisible ? "grid lg:grid-cols-2 gap-5" : "block"
+          } duration-500`}
       >
         {/* TABLE */}
-        <ConfigProvider
-          theme={{
-            components: {
-              Table: {
-                headerBg: "#778beb",
-                headerColor: "#fff",
+        <div className="w-full overflow-x-auto ">
+          <ConfigProvider
+            theme={{
+              components: {
+                Table: {
+                  headerBg: "#778beb",
+                  headerColor: "#fff",
+                },
               },
-            },
-          }}
-        >
-          <Table
-            rowKey="id"
-            loading={isLoading}
-            columns={columns}
-            dataSource={providers}
-            scroll={{ x: "max-content" }}
-            pagination={{
-              current: pagination?.page,
-              pageSize: pagination?.limit,
-              total: pagination?.totalResults,
-              position: ["bottomCenter"],
-              onChange: (page) => setPage(page),
             }}
-          />
-        </ConfigProvider>
+          >
+            <Table
+              rowKey="id"
+              loading={isLoading}
+              columns={columns}
+              dataSource={providers}
+              scroll={{ x: "max-content" }}
+              pagination={{
+                current: pagination?.page,
+                pageSize: pagination?.limit,
+                total: pagination?.totalResults,
+                position: ["bottomCenter"],
+                onChange: (page) => setPage(page),
+              }}
+            />
+          </ConfigProvider>
+        </div>
 
         {/* DETAILS */}
         {detailsVisible && (
@@ -176,21 +178,26 @@ const ProviderList = () => {
                 <FaArrowLeft className="text-xl text-yellow-50" />
               </div>
 
-              <div className="flex items-center gap-5 mb-5">
-                <img
-                  className="w-24 h-24 rounded-full"
-                  src={
-                    userDataFull?.profileImage?.imageUrl?.includes(
-                      "amazonaws"
-                    )
-                      ? userDataFull?.profileImage?.imageUrl
-                      : Url + userDataFull?.profileImage?.imageUrl
-                  }
-                  alt="Provider"
-                />
-                <h1 className="text-2xl font-semibold">
-                  {userDataFull?.name}
-                </h1>
+              <div className="flex justify-between items-center ">
+                <div className="flex items-center gap-5 mb-5">
+                  <img
+                    className="w-24 h-24 rounded-full"
+                    src={
+                      userDataFull?.profileImage?.imageUrl?.includes(
+                        "amazonaws"
+                      )
+                        ? userDataFull?.profileImage?.imageUrl
+                        : Url + userDataFull?.profileImage?.imageUrl
+                    }
+                    alt="Provider"
+                  />
+                  <h1 className="text-2xl font-semibold">
+                    {userDataFull?.name}
+                  </h1>
+                </div>
+                <div>
+                  <button className="py-2 px-8 bg-[#778beb] text-white rounded">Block</button>
+                </div>
               </div>
 
               <div className="space-y-3">
@@ -214,6 +221,14 @@ const ProviderList = () => {
                     <span>{value}</span>
                   </div>
                 ))}
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mt-4 mb-2">Face Image from Front Camera</h2>
+                <img className="w-full" src={userDataFull?.faceImageFromFrontCam[0]} alt="" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold mt-4 mb-2">Front Side Certificate Image</h2>
+                <img className="w-full" src={userDataFull?.frontSideCertificateImage[0]} alt="" />
               </div>
             </div>
           </div>
