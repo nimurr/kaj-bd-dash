@@ -247,20 +247,20 @@ const WithdrawalRequest = () => {
             >
                 {modalData && (
                     <div className="space-y-3">
-                        <p>
+                        <p className="flex items-center justify-between">
                             <strong>Name:</strong> {modalData?.userId?.name}
                         </p>
-                        <p>
+                        <p className="flex items-center justify-between">
                             <strong>Email:</strong> {modalData?.userId?.email}
                         </p>
-                        <p>
+                        <p className="flex items-center justify-between">
                             <strong>Bank:</strong> {modalData?.bankName}
                         </p>
-                        <p>
+                        <p className="flex items-center justify-between">
                             <strong>Account:</strong>{" "}
                             {modalData?.bankAccountNumber}
                         </p>
-                        <p>
+                       <p className="flex items-center justify-between">
                             <strong>Amount:</strong> ৳
                             {modalData?.requestedAmount}
                         </p>
