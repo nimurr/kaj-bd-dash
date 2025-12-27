@@ -29,7 +29,7 @@ const ProviderListNewProviderRequest = () => {
     useGetAllNewProvidersListQuery({
       page,
       limit,
-      searchData: searchText,
+      // searchData: searchText,
       from: selectedDate[0]
         ? selectedDate[0].startOf("day").toISOString()
         : "2024-01-01",
@@ -149,7 +149,7 @@ const ProviderListNewProviderRequest = () => {
             />
           </Item>
 
-          <Item>
+          {/* <Item>
             <Input
               placeholder="Search by Name"
               onChange={(e) => {
@@ -157,8 +157,8 @@ const ProviderListNewProviderRequest = () => {
                 setPage(1);
               }}
             />
-          </Item>
-
+          </Item> */}
+{/* 
           <Item>
             <button
               type="button"
@@ -166,7 +166,7 @@ const ProviderListNewProviderRequest = () => {
             >
               <IoIosSearch />
             </button>
-          </Item>
+          </Item> */}
         </Form>
       </div>
 

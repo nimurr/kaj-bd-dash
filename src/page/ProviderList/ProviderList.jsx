@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ConfigProvider, Table, Form, Input, DatePicker } from "antd";
+import { ConfigProvider, Table, Form, Input, DatePicker, Image } from "antd";
 import moment from "moment";
 import { IoIosSearch } from "react-icons/io";
 import { FaAngleLeft, FaArrowLeft } from "react-icons/fa";
@@ -226,11 +226,11 @@ const ProviderList = () => {
               </div>
               <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2">Face Image from Front Camera</h2>
-                <img className="w-full" src={userDataFull?.faceImageFromFrontCam[0]} alt="" />
+                <Image className="w-full" src={userDataFull?.faceImageFromFrontCam[0]} alt="" />
               </div>
               <div>
                 <h2 className="text-xl font-semibold mt-4 mb-2">Front Side Certificate Image</h2>
-                <img className="w-full" src={userDataFull?.frontSideCertificateImage[0]} alt="" />
+                <Image className="w-full" src={userDataFull?.frontSideCertificateImage[0]} alt="" />
               </div>
             </div>
           </div>
