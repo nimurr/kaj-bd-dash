@@ -12,12 +12,14 @@ const TransactionHistory = () => {
     const [selectedDate, setSelectedDate] = useState([null, null]);
     const [status, setStatus] = useState('');
     const [currentPage, setCurrentPage] = useState(1);  // Current page state
+    const pageSize = 10; // Number of items per page
 
     // API call to fetch transaction history
-    const { data: withdrawalData, refetch, isLoading } = useGetPaymentTransactionsHistoryQuery({ status, searchText });
+    const { data: withdrawalData, refetch, isLoading } = useGetPaymentTransactionsHistoryQuery({ status, searchText   });
     const fullwithdrawalData = withdrawalData?.attributes?.results || [];
     const totalResults = withdrawalData?.attributes?.totalResults || 0;  // Total number of transactions
-    const pageSize = 10; // Number of items per page
+
+    console.log(withdrawalData?.attributes)
 
     console.log(fullwithdrawalData)
 

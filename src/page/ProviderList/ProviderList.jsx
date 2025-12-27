@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ConfigProvider, Table, Form, Input, DatePicker } from "antd";
 import moment from "moment";
 import { IoIosSearch } from "react-icons/io";
@@ -11,203 +11,216 @@ import { useGetAllProvidersQuery } from "../../redux/features/providers/provider
 const { Item } = Form;
 
 const ProviderList = () => {
-    const [fromDate, setFromDate] = useState('2024-01-01');
-    const [toDate, setToDate] = useState('2222-12-31');
-    const [searchData, setSearchData] = useState('');
+  // ================= STATE =================
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [searchText, setSearchText] = useState("");
+  const [selectedDate, setSelectedDate] = useState([null, null]);
 
-    const { data, isLoading } = useGetAllProvidersQuery({ from: fromDate, to: toDate, searchData });
-    const fullUserData = data?.data?.attributes?.results;
-    // console.log(fullUserData)
+  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [userDataFull, setUserDataFull] = useState(null);
 
-    const [searchText, setSearchText] = useState("");
-    const [selectedDate, setSelectedDate] = useState([null, null]);  // Store fromDate and toDate
-    const [currentPage, setCurrentPage] = useState(1);
-    const [dataSource, setDataSource] = useState(fullUserData); // Initialize with full user data
+  // ================= API =================
+  const { data, isLoading } = useGetAllProvidersQuery({
+    page,
+    limit,
+    searchData: searchText,
+    from: selectedDate[0]
+      ? selectedDate[0].startOf("day").toISOString()
+      : "2024-01-01",
+    to: selectedDate[1]
+      ? selectedDate[1].endOf("day").toISOString()
+      : "2222-12-31",
+  });
 
-    // User details visibility state
-    const [detailsVisible, setDetailsVisible] = useState(false);
-    const [userDataFull, setUserDataFull] = useState(null); // Store full user data for the selected user
+  // ================= DATA =================
+  const providers = data?.data?.attributes?.results || [];
+  const pagination = data?.data?.attributes;
 
-    // Filter users based on search text and date range
-    useEffect(() => {
-        if (!fullUserData) return;
+  // ================= HANDLER =================
+  const handleShowDetails = (user) => {
+    setUserDataFull(user);
+    setDetailsVisible(true);
+  };
 
-        let filteredData = fullUserData;
+  // ================= COLUMNS =================
+  const columns = [
+    {
+      title: "#SI",
+      render: (_, __, index) =>
+        (pagination?.page - 1) * limit + index + 1,
+    },
+    { title: "Full Name", dataIndex: "name" },
+    { title: "Email", dataIndex: "email" },
+    { title: "Gender", dataIndex: "gender" },
+    { title: "Role", dataIndex: "role" },
+    {
+      title: "Joined Date",
+      dataIndex: "createdAt",
+      render: (date) => moment(date).format("DD MMM YYYY"),
+    },
+    {
+      title: "Action",
+      render: (_, record) => (
+        <div
+          onClick={() => handleShowDetails(record)}
+          className="cursor-pointer"
+        >
+          <IoEyeOutline className="text-2xl" />
+        </div>
+      ),
+    },
+  ];
 
-        // Apply search filter
-        if (searchText.trim() !== "") {
-            filteredData = filteredData.filter(
-                (user) =>
-                    user.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-                    user.email?.toLowerCase().includes(searchText.toLowerCase()) ||
-                    String(user.phoneNumber).includes(searchText)
-            );
-        }
+  // ================= JSX =================
+  return (
+    <section>
+      {/* HEADER */}
+      <div className="md:flex justify-between items-center space-y-2 py-6 mb-4">
+        <Link to="/" className="text-2xl flex items-center">
+          <FaAngleLeft />
+          <span className="ml-2">
+            Provider list {detailsVisible ? "Details" : ""}
+          </span>
+        </Link>
 
-        // Apply date filter
-        if (selectedDate[0] && selectedDate[1]) {
-            const from = selectedDate[0].startOf("day").toISOString();
-            const to = selectedDate[1].endOf("day").toISOString();
+        {/* FILTERS */}
+        <Form layout="inline" className="flex space-x-2">
+          <Link
+            to="/provider-list/new-provider-request"
+            className="py-2 px-8 text-white rounded-lg bg-[#778beb]"
+          >
+            New Provider Request
+          </Link>
 
-            filteredData = filteredData.filter(
-                (user) => moment(user.createdAt).isBetween(from, to, null, '[]')
-            );
-        }
+          <Item>
+            <DatePicker
+              placeholder="From Date"
+              onChange={(date) =>
+                setSelectedDate([date, selectedDate[1]])
+              }
+            />
+          </Item>
 
-        setDataSource(filteredData);
-    }, [searchText, selectedDate, fullUserData]);
+          <Item>
+            <DatePicker
+              placeholder="To Date"
+              onChange={(date) =>
+                setSelectedDate([selectedDate[0], date])
+              }
+            />
+          </Item>
 
-    const handleShowDetails = (user) => {
-        setUserDataFull(user); // Set the selected user details
-        setDetailsVisible(true); // Show user details section
-    };
+          <Item>
+            <Input
+              placeholder="Search by Name"
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                setPage(1);
+              }}
+            />
+          </Item>
 
-    const columns = [
-        { title: "#SI", dataIndex: "si", key: "si", render: (text, record, index) => index + 1 },
-        { title: "Full Name", dataIndex: "name", key: "name" },
-        { title: "Email", dataIndex: "email", key: "email" },
-        // { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
-        { title: "Gender", dataIndex: "gender", key: "gender" },
-        { title: "Role", dataIndex: "role", key: "role" },
-        {
-            title: "Joined Date",
-            dataIndex: "createdAt",
-            key: "createdAt",
-            render: (date) => moment(date).format("DD MMM YYYY"),
-        },
-        {
-            title: "Action",
-            key: "action",
-            render: (_, record) => (
-                <div onClick={() => handleShowDetails(record)} className="cursor-pointer">
-                    <IoEyeOutline className="text-2xl" />
-                </div>
-            ),
-        },
-    ];
+          <Item>
+            <button
+              type="button"
+              className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-white"
+            >
+              <IoIosSearch className="size-5" />
+            </button>
+          </Item>
+        </Form>
+      </div>
 
-    return (
-        <section>
-            <div className="md:flex justify-between items-center space-y-2 py-6 mb-4">
-                <Link to={"/"} className="text-2xl flex items-center ">
-                    <FaAngleLeft />  Provider list  {detailsVisible ? "Details" : ""}
-                </Link>
-                <Form layout="inline" className="flex space-x-2">
-                    <Link to={'/provider-list/new-provider-request'} className="py-2 px-8 hover:!text-fuchsia-50  text-white rounded-lg bg-[#778beb]">New Provider Request</Link>
-                    <Item name="fromDate">
-                        <DatePicker
-                            className="rounded-md border border-[#778beb]"
-                            onChange={(date) => setSelectedDate([date, selectedDate[1]])}
-                            placeholder="From Date"
-                        />
-                    </Item>
-                    <Item name="toDate">
-                        <DatePicker
-                            className="rounded-md border border-[#778beb]"
-                            onChange={(date) => setSelectedDate([selectedDate[0], date])}
-                            placeholder="To Date"
-                        />
-                    </Item>
-                    <Item name="username">
-                        <Input
-                            className="rounded-md w-[70%] md:w-full border border-[#778beb]"
-                            placeholder="Search by Name ..."
-                            onChange={(e) => setSearchText(e.target.value)}
-                        />
-                    </Item>
-                    <Item>
-                        <button className="size-8 rounded-full flex justify-center items-center bg-[#778beb] text-white">
-                            <IoIosSearch className="size-5" />
-                        </button>
-                    </Item>
-                </Form>
+      {/* CONTENT */}
+      <div
+        className={`${
+          detailsVisible ? "grid lg:grid-cols-2 gap-5" : "block"
+        } duration-500`}
+      >
+        {/* TABLE */}
+        <ConfigProvider
+          theme={{
+            components: {
+              Table: {
+                headerBg: "#778beb",
+                headerColor: "#fff",
+              },
+            },
+          }}
+        >
+          <Table
+            rowKey="id"
+            loading={isLoading}
+            columns={columns}
+            dataSource={providers}
+            scroll={{ x: "max-content" }}
+            pagination={{
+              current: pagination?.page,
+              pageSize: pagination?.limit,
+              total: pagination?.totalResults,
+              position: ["bottomCenter"],
+              onChange: (page) => setPage(page),
+            }}
+          />
+        </ConfigProvider>
+
+        {/* DETAILS */}
+        {detailsVisible && (
+          <div className="duration-500">
+            <div className="w-full md:w-3/4 mx-auto border-2 p-2 rounded-lg relative">
+              <div
+                onClick={() => setDetailsVisible(false)}
+                className="absolute bg-[#778beb] p-3 rounded-full -top-5 -left-5 cursor-pointer"
+              >
+                <FaArrowLeft className="text-xl text-yellow-50" />
+              </div>
+
+              <div className="flex items-center gap-5 mb-5">
+                <img
+                  className="w-24 h-24 rounded-full"
+                  src={
+                    userDataFull?.profileImage?.imageUrl?.includes(
+                      "amazonaws"
+                    )
+                      ? userDataFull?.profileImage?.imageUrl
+                      : Url + userDataFull?.profileImage?.imageUrl
+                  }
+                  alt="Provider"
+                />
+                <h1 className="text-2xl font-semibold">
+                  {userDataFull?.name}
+                </h1>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  ["Name", userDataFull?.name],
+                  ["Email", userDataFull?.email],
+                  ["Role", userDataFull?.role],
+                  ["Gender", userDataFull?.gender],
+                  [
+                    "Created Date",
+                    moment(userDataFull?.createdAt).format(
+                      "YYYY-MM-DD"
+                    ),
+                  ],
+                ].map(([label, value]) => (
+                  <div
+                    key={label}
+                    className="flex justify-between border-2 p-2 rounded-lg"
+                  >
+                    <span className="font-semibold">{label}</span>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className={`${detailsVisible ? "grid lg:grid-cols-2 gap-5" : "block"} duration-500`}>
-                <ConfigProvider
-                    theme={{
-                        components: {
-                            Table: {
-                                headerBg: "#778beb",
-                                headerColor: "#fff",
-                                headerBorderRadius: 5,
-                            },
-                        },
-                    }}
-                >
-                    <Table
-                        pagination={{
-                            position: ["bottomCenter"],
-                            current: currentPage,
-                            onChange: setCurrentPage,
-                        }}
-                        loading={isLoading}
-                        scroll={{ x: "max-content" }}
-                        responsive={true}
-                        columns={columns}
-                        dataSource={dataSource}
-                        rowKey="id"
-                    />
-                </ConfigProvider>
-
-                {/* Provider Details Section */}
-                <div className={`${detailsVisible ? "block" : "hidden"} duration-500`}>
-                    <div className="w-full md:w-3/4 mx-auto border-2 border-[#778beb] p-2 rounded-lg relative">
-                        <div onClick={() => setDetailsVisible(false)} className="absolute bg-[#778beb] p-3 rounded-full -top-5 -left-5 cursor-pointer">
-                            <FaArrowLeft className="text-xl text-yellow-50" />
-                        </div>
-                        {/* Provider Profile Section */}
-                        <div className="flex items-center justify-between gap-5 mb-5">
-                            <div className="flex items-center gap-5">
-                                <img
-                                    className="w-24 h-24 rounded-full"
-                                    src={userDataFull?.profileImage?.imageUrl.includes('amazonaws') ? userDataFull?.profileImage?.imageUrl : Url + userDataFull?.profileImage?.imageUrl}
-                                    alt="Provider"
-                                />
-                                <h1 className="text-2xl font-semibold">{userDataFull?.name}</h1>
-                            </div>
-                        </div>
-                        {/* Provider Details Section */}
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Name</span>
-                                <span>{userDataFull?.name}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Email</span>
-                                <span>{userDataFull?.email}</span>
-                            </div>
-                            {/* <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Phone Number</span>
-                                <span>{userDataFull?.phoneNumber}</span>
-                            </div> */}
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Role</span>
-                                <span>{userDataFull?.role}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Created Date</span>
-                                <span>{moment(userDataFull?.createdAt).format("YYYY-MM-DD")}</span>
-                            </div>
-                            <div className="flex items-center justify-between py-3 border-2 p-2 rounded-lg border-[#ccc]">
-                                <span className="font-semibold">Gender</span>
-                                <span>{userDataFull?.gender}</span>
-                            </div>
-                            <div className='my-5'>
-                                <h2 className="text-2xl font-semibold mb-3" >FrontSide Certificate Image</h2>
-                                <img className="w-full" src={userDataFull?.frontSideCertificateImage[0].includes('amazonaws') ? userDataFull?.frontSideCertificateImage[0] : Url + userDataFull?.frontSideCertificateImage[0]} alt="" />
-                            </div>
-                            <div className=''>
-                                <h2 className="text-2xl font-semibold mb-3" >BackSide Certificate Image</h2>
-                                <img className="w-full" src={userDataFull?.backSideCertificateImage[0].includes('amazonaws') ? userDataFull?.backSideCertificateImage[0] : Url + userDataFull?.backSideCertificateImage[0]} alt="" />
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
+          </div>
+        )}
+      </div>
+    </section>
+  );
 };
 
 export default ProviderList;

@@ -24,7 +24,6 @@ const Lawyera = () => {
     const fullData = data?.data?.attributes?.results || [];
     const pageItems = data?.data?.attributes?.totalPages || 0;
 
-    console.log(fullData)
 
 
     // Handle "View Details" Modal

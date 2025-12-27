@@ -3,8 +3,8 @@ import { baseApi } from "../../baseApi/baseApi";
 const withdrawalApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getWithdrawal: builder.query({
-            query: ({ from, to, status }) => ({
-                url: `/withdrawal-requst/paginate/for-admin?from=${from}&to=${to}&status=${status}`,
+            query: ({ page, limit, status, from, to }) => ({
+                url: `/withdrawal-requst/paginate/for-admin?from=${from}&to=${to}&status=${status}&page=${page}&limit=${limit}`,
                 method: "GET",
             }),
             providesTags: ["Withdrawal"],
@@ -20,4 +20,4 @@ const withdrawalApi = baseApi.injectEndpoints({
     }),
 });
 
-export const { useGetWithdrawalQuery , useApproveAndRejectMutation } = withdrawalApi;
+export const { useGetWithdrawalQuery, useApproveAndRejectMutation } = withdrawalApi;
