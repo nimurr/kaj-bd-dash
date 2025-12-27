@@ -16,7 +16,9 @@ const Notification = () => {
   const totalResults = data?.data?.attributes?.totalResults || 0; // Total number of items (notifications)
   const totalPages = data?.data?.attributes?.totalPages || 1; // Total number of pages
 
-  console.log(data)
+  console.log(totalResults);
+
+  console.log(data);
 
   // Handle pagination page change
   const onPageChange = (page) => {
