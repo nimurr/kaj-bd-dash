@@ -49,7 +49,7 @@ const Header = ({ toggleSidebar }) => {
 
     // ✅ LISTENER
     const handleAdminNotification = (payload) => {
-      console.log("🔔 Admin Notification:", payload);
+      console.log("🔔 Admin Notification");
 
       localStorage.setItem("isNotification", JSON.stringify({ isNotification: true }));
 
